@@ -1,0 +1,21 @@
+package com.teamteach.profilemgmt.domain.models.vo;
+
+
+import com.teamteach.profilemgmt.domain.models.ProfileTypes;
+
+public class IndividualType {
+    ProfileTypes type;
+
+    public static IndividualType createType(String input) {
+        return new IndividualType(determineType(input));
+    }
+
+    private static ProfileTypes determineType(String input) {
+        return ProfileTypes.Parent;
+    }
+
+    private IndividualType(ProfileTypes type) {
+        this.type = type;
+    }
+
+}
