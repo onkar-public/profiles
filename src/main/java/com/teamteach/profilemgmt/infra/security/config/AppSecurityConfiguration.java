@@ -1,8 +1,8 @@
 package com.teamteach.profilemgmt.infra.security.config;
 
-import com.teamteach.profilemgmt.shared.security.JwtTokenValidatorFilter;
-import com.teamteach.profilemgmt.shared.security.authentication.IAuthenticationProviderFactory;
-import com.teamteach.profilemgmt.shared.security.jwt.JwtOperationsWrapperSvc;
+import com.teamteach.commons.security.JwtTokenValidatorFilter;
+import com.teamteach.commons.security.authentication.IAuthenticationProviderFactory;
+import com.teamteach.commons.security.jwt.JwtOperationsWrapperSvc;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

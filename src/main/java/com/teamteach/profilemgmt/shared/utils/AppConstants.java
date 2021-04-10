@@ -1,6 +1,6 @@
 package com.teamteach.profilemgmt.shared.utils;
 
-public class AppSecurityConstants {
+public class AppConstants {
     public static final String LOGIN_URL = "/users/login";
     public static final String SIGNUP_URL = "/users/signup";
     public static final String AUTHORIZATION_HEADER = "Authorization";

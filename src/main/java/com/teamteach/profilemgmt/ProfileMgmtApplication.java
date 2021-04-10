@@ -1,7 +1,7 @@
 package com.teamteach.profilemgmt;
 
-import com.teamteach.profilemgmt.shared.security.jwt.config.JwtConfig;
-import com.teamteach.profilemgmt.shared.security.jwt.config.KeyConfig;
+import com.teamteach.commons.security.jwt.config.JwtConfig;
+import com.teamteach.commons.security.jwt.config.KeyConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
