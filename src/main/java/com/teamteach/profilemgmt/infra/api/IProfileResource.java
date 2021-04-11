@@ -1,5 +1,6 @@
 package com.teamteach.profilemgmt.infra.api;
 
+import com.teamteach.profilemgmt.domain.command.AddChildrenCommand;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,11 @@ public interface IProfileResource {
 
     @PostMapping("{profileid}/picture")
     default void updateProfilePicture() {
+
+    }
+
+    @PostMapping("{profileid}/children")
+    default void addChildren( @PathVariable String profileid, @RequestBody @Valid AddChildrenCommand addChildrenCommand) {
 
     }
 

@@ -1,5 +1,6 @@
 package com.teamteach.profilemgmt.domain.usecases;
 
+import com.teamteach.profilemgmt.domain.command.AddChildrenCommand;
 import com.teamteach.profilemgmt.domain.mappers.ProfileCommandMapper;
 import com.teamteach.profilemgmt.domain.ports.in.IProfileMgmt;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
@@ -15,5 +16,14 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     @Override
     public void createBasicProfile(BasicProfileCreationCommand signUpCommand) {
 
+    }
+
+    @Override
+    public void addChildren(String parentrofileId, AddChildrenCommand addChildrenCommand) {
+        // Validate that the Parent Profile Id
+
+        // Check for duplicate children
+
+        //Add the child profile
     }
 }
