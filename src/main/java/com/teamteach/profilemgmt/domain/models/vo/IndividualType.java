@@ -14,7 +14,7 @@ public class IndividualType {
         return ProfileTypes.Parent;
     }
 
-    private IndividualType(ProfileTypes type) {
+    public IndividualType(ProfileTypes type) {
         this.type = type;
     }
 

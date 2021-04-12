@@ -1,20 +1,14 @@
 server.port: 8081
 spring:
-  datasource:
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://teamteach.clx92rbt29sc.ap-south-1.rds.amazonaws.com:3306/profile_mgmt
-    username: admin
-    password: DigiSherpa21
-  jpa:
-    hibernate.ddl-auto: update
-    generate-ddl: true
-    show-sql: true
+  data:
+    mongodb:
+      uri: mongodb+srv://digisherpa:MongoSherpa21@digisherpa.h80qy.mongodb.net/digisherpa?retryWrites=true&w=majority
 
 app:
   security:
     jwt:
       authtype: Bearer
-      expirationmins: 45
+      expirationmins: 1440
       uri: asd
       header: jjh
     authentication:
