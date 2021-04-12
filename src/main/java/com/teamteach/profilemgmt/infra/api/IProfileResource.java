@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collections;
 
-@RequestMapping("profiles")
+@RequestMapping("/")
 public interface IProfileResource {
 
-    @PostMapping("basic")
+    @PostMapping("create")
     void createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
 
     @PostMapping("{profileid}/picture")
