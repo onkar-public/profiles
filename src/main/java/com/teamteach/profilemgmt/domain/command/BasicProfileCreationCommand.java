@@ -12,7 +12,7 @@ public class BasicProfileCreationCommand extends ValidatingCommand<BasicProfileC
     String fname;
     String lname;
     @NotNull
-    String email;
+    String userid;
     String profiletype;
     @Override
     protected void validateSelf() {
