@@ -19,13 +19,13 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     final IProfileMgmt profileMgmt;
 
     @Override
-    @ApiOperation(value = "Creates the Basic Profile of an Individual", authorizations = { @Authorization(value="jwtToken") })
+//    @ApiOperation(value = "Creates the Basic Profile of an Individual", authorizations = { @Authorization(value="jwtToken") })
     public void createBasicProfile(@Valid BasicProfileCreationCommand profileCreationCommand) {
         profileMgmt.createBasicProfile(profileCreationCommand);
     }
 
     @Override
-    @ApiOperation(value = "Adds new children of an Individual (Parent)", authorizations = { @Authorization(value="jwtToken") })
+//    @ApiOperation(value = "Adds new children of an Individual (Parent)", authorizations = { @Authorization(value="jwtToken") })
     public void addChildren(String profileid, @Valid AddChildrenCommand addChildrenCommand) {
         profileMgmt.addChildren(profileid,addChildrenCommand);
     }
