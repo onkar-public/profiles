@@ -16,3 +16,15 @@ app:
     key:
       keytype: shared
       signingsecret: fe80::6184:62f1:2b9e:5b8313:8666:1qaz
+  rabbitmq:
+    host: 49.50.107.94
+    port: 5672
+    virtual-host: teamteach
+    username: admin
+    password: DigiSherpa21
+
+exchange:
+  signup: signupexchange
+
+signup.routingkeys: event.email,event.profileupdate
+listen.queue.names: event.profileupdate
