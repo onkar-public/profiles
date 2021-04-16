@@ -21,10 +21,10 @@ public class ApplicationBeanConfig {
 
     @Bean("profileMgmtSvc")
     IProfileMgmt profileMgmt() {
-        return new ProfileMgmtUseCases(profileRepository);
+        return new ProfileMgmtUseCases(profileRepository, messagingPort);
     }
     @Bean("profileDALayer")
     IProfileRepository profileDAL() {
-        return new ProfileDAL(mongoTemplate, messagingPort);
+        return new ProfileDAL(mongoTemplate);
     }
 }
