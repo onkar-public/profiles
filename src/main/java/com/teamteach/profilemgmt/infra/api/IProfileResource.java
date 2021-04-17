@@ -21,7 +21,6 @@ public interface IProfileResource {
     }
 
     @ApiIgnore
-    @PostMapping("{profileid}/picture")
     @PostMapping("{profileid}/children")
     default void addChildren( @PathVariable String profileid, @RequestBody @Valid AddChildrenCommand addChildrenCommand) {
 
