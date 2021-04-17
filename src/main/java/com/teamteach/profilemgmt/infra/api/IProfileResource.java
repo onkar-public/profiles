@@ -27,7 +27,6 @@ public interface IProfileResource {
     }
 
     @ApiIgnore
-    @PostMapping("{profileid}/picture")
     @GetMapping("{profileid}")
     default void getProfileById(@PathVariable String profileid) {
 
