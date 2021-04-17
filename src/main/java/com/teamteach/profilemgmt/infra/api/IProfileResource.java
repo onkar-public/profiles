@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collections;
 
-@RequestMapping("server")
+@RequestMapping("profiles")
 public interface IProfileResource {
 
     @PostMapping("create")
