@@ -8,10 +8,11 @@ import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
 @Getter
-public class AddChildrenCommand extends ValidatingCommand<BasicProfileCreationCommand>{
+public class AddChildCommand extends ValidatingCommand<BasicProfileCreationCommand>{
     @NotNull
-    String fname;
-    String lname;
-    int birthyear;
+    String parentId;
+    String fName;
+    String lName;
+    String birthYear;
     String info;
 }

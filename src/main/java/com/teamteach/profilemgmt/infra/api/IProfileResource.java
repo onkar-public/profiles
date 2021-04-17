@@ -1,7 +1,10 @@
 package com.teamteach.profilemgmt.infra.api;
 
-import com.teamteach.profilemgmt.domain.command.AddChildrenCommand;
+import com.teamteach.profilemgmt.domain.command.*;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
+import com.teamteach.profilemgmt.domain.models.ProfileModel;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -12,7 +15,7 @@ import java.util.Collections;
 public interface IProfileResource {
 
     @PostMapping("create")
-    void createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
+    ResponseEntity<ProfileModel> createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
 
     @ApiIgnore
     @PostMapping("{profileid}/picture")
@@ -21,8 +24,8 @@ public interface IProfileResource {
     }
 
     @ApiIgnore
-    @PostMapping("{profileid}/children")
-    default void addChildren( @PathVariable String profileid, @RequestBody @Valid AddChildrenCommand addChildrenCommand) {
+    @PostMapping("{profileid}/child")
+    default void addChild( @PathVariable String profileid, @RequestBody @Valid AddChildCommand addChildCommand) {
 
     }
 
