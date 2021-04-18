@@ -24,10 +24,8 @@ public interface IProfileResource {
     }
 
     @ApiIgnore
-    @PostMapping("{profileid}/child")
-    default void addChild( @PathVariable String profileid, @RequestBody @Valid AddChildCommand addChildCommand) {
-
-    }
+    @PostMapping("child")
+    ResponseEntity<ProfileModel> addChild(@RequestBody @Valid AddChildCommand addChildCommand);
 
     @ApiIgnore
     @GetMapping("{profileid}")

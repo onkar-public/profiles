@@ -6,6 +6,8 @@ import com.teamteach.profilemgmt.domain.models.*;
 import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
 import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
 import com.teamteach.commons.connectors.rabbit.core.IMessagingPort;
+import com.teamteach.profilemgmt.domain.usecases.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
@@ -16,6 +18,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     final IProfileRepository profileRepository;
     final IMessagingPort messagingPort;
+
+    @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
 
     @PostConstruct
     void initMQ() {
@@ -31,18 +36,31 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ProfileModel createBasicProfile(BasicProfileCreationCommand signUpCommand) {
-        ProfileModel profileModel = new ProfileModel(signUpCommand.getUserid(), "", "", "", signUpCommand.getFname(), signUpCommand.getLname(), new IndividualType(ProfileTypes.Parent));
+        ProfileModel profileModel = ProfileModel.builder()
+                                                .userId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
+                                                .fName(signUpCommand.getFName())
+                                                .lName(signUpCommand.getLName())
+                                                .userType(new IndividualType(ProfileTypes.Parent))
+                                                .build();
         return profileRepository.saveProfile(profileModel);
     }
 
     @Override
-    public void addChild(String parentProfileId, AddChildCommand addChildCommand) {
+    public ProfileModel addChild(AddChildCommand addChildCommand) {
         // Validate that the Parent Profile Id
 
         // Check for duplicate children
 
         //Add the child profile
-        ProfileModel profileModel = new ProfileModel("",addChildCommand.getParentId(),addChildCommand.getInfo(),addChildCommand.getBirthYear(),addChildCommand.getFName(),addChildCommand.getLName(),null);
-        profileRepository.addChild(parentProfileId,addChildCommand);
+        ProfileModel profileModel = ProfileModel.builder()
+                                                .userId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
+                                                .ownerId(addChildCommand.getParentId())
+                                                .fName(addChildCommand.getFName())
+                                                .lName(addChildCommand.getLName())
+                                                .birthYear(addChildCommand.getBirthYear())
+                                                .info(addChildCommand.getInfo())
+                                                .userType(new IndividualType(ProfileTypes.Child))
+                                                .build();
+        return profileRepository.addChild(profileModel);
     }
 }

@@ -35,14 +35,8 @@ public class ProfileDAL  implements IProfileRepository {
     }
 
     @Override
-    public void addChild(String parentId, AddChildCommand childData){
-        ProfileModel profileModel = ProfileModel.builder()
-                                                .ownerId(parentId)
-                                                .fname(childData.getFName())
-                                                .lname(childData.getLName())
-                                                .birthYear(childData.getBirthYear())
-                                                .info(childData.getInfo())
-                                                .build();            
-        mongoTemplate.save(profileModel);
+    public ProfileModel addChild(ProfileModel profileModel){
+        ProfileModel newChildModel = mongoTemplate.save(profileModel);
+        return newChildModel;
     }
 }

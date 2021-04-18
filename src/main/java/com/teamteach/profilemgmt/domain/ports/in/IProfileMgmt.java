@@ -6,5 +6,5 @@ import com.teamteach.profilemgmt.domain.models.ProfileModel;
 
 public interface IProfileMgmt {
     ProfileModel createBasicProfile(BasicProfileCreationCommand signUpCommand);
-    void addChild(String parentProfileId, AddChildCommand addChildCommand);
+    ProfileModel addChild(AddChildCommand addChildCommand);
 }

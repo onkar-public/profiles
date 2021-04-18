@@ -29,7 +29,7 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
 
     @Override
 //    @ApiOperation(value = "Adds new children of an Individual (Parent)", authorizations = { @Authorization(value="jwtToken") })
-    public void addChild(String profileid, @Valid AddChildCommand addChildCommand) {
-        profileMgmt.addChild(profileid, addChildCommand);
+    public ResponseEntity<ProfileModel> addChild(@Valid AddChildCommand addChildCommand) {
+        return ResponseEntity.ok(profileMgmt.addChild(addChildCommand));
     }
 }

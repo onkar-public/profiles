@@ -1,6 +1,8 @@
 package com.teamteach.profilemgmt.domain.command;
 
 import lombok.Getter;
+import lombok.Data;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
@@ -9,11 +11,11 @@ import javax.validation.constraints.NotNull;
 public class BasicProfileCreationCommand extends ValidatingCommand<BasicProfileCreationCommand> {
 
     @NotNull
-    String fname;
-    String lname;
+    String fName;
+    String lName;
     @NotNull
-    String userid;
-    String profiletype;
+    String userId;
+    String profileType;
     @Override
     protected void validateSelf() {
         super.validateSelf();

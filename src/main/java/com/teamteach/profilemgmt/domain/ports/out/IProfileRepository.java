@@ -8,5 +8,5 @@ public interface IProfileRepository {
    String setupInitialProfile(ProfileModel profileModel);
    ProfileModel getProfileByProfileId(String profileId);
    ProfileModel saveProfile(ProfileModel profileModel);
-   void addChild(String parentId, AddChildCommand childData);
+   ProfileModel addChild(ProfileModel profileModel);
 }
