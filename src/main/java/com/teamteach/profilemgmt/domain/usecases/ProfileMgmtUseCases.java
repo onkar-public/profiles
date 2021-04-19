@@ -8,10 +8,18 @@ import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
 import com.teamteach.commons.connectors.rabbit.core.IMessagingPort;
 import com.teamteach.profilemgmt.domain.usecases.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.teamteach.profilemgmt.domain.responses.ParentProfileResponseDto;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+
+import java.util.*;
 
 @RequiredArgsConstructor
 public class ProfileMgmtUseCases implements IProfileMgmt {
@@ -21,6 +29,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
+
+    @Autowired
+	private MongoTemplate mongoTemplate;
 
     @PostConstruct
     void initMQ() {
@@ -58,5 +69,18 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .userType(new IndividualType(ProfileTypes.Child))
                                                 .build();
         return profileRepository.addChild(profileModel);
+    }
+
+    @Override
+    public ParentProfileResponseDto getProfile(String userId){
+        Query query = new Query(Criteria.where("userId").is(userId));
+        ProfileModel profileModel = mongoTemplate.findOne(query, ProfileModel.class);
+        ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
+                                                                         .fname(profileModel.getFname())
+                                                                         .lname(profileModel.getLname())
+                                                                         .email(profileModel.getUserId())
+                                                                         .userType(profileModel.getUserType())
+                                                                         .build();
+        return parentProfile;                                                                
     }
 }

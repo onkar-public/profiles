@@ -45,8 +45,8 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     }
 
     @Override
-    public ResponseEntity<ObjectResponseDto> getProfile(String profileId) {
-        ParentProfileResponseDto parentProfile = null;
+    public ResponseEntity<ObjectResponseDto> getProfile(String userId) {
+        ParentProfileResponseDto parentProfile = profileMgmt.getProfile(userId);
         return ResponseEntity.ok(new ObjectResponseDto(true, "Success", parentProfile));
     }
 }
