@@ -38,8 +38,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     public ProfileModel createBasicProfile(BasicProfileCreationCommand signUpCommand) {
         ProfileModel profileModel = ProfileModel.builder()
                                                 .userId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
-                                                .fName(signUpCommand.getFName())
-                                                .lName(signUpCommand.getLName())
+                                                .fname(signUpCommand.getFname())
+                                                .lname(signUpCommand.getLname())
                                                 .userType(new IndividualType(ProfileTypes.Parent))
                                                 .build();
         return profileRepository.saveProfile(profileModel);
@@ -50,8 +50,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         ProfileModel profileModel = ProfileModel.builder()
                                                 .userId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
                                                 .ownerId(addChildCommand.getParentId())
-                                                .fName(addChildCommand.getFName())
-                                                .lName(addChildCommand.getLName())
+                                                .fname(addChildCommand.getFname())
+                                                .lname(addChildCommand.getLname())
                                                 .birthYear(addChildCommand.getBirthYear())
                                                 .info(addChildCommand.getInfo())
                                                 .userType(new IndividualType(ProfileTypes.Child))

@@ -24,8 +24,8 @@ public class ProfileModel {
     private String ownerId;
     private String info;
     private String birthYear;
-    private String fName;
-    private String lName;
+    private String fname;
+    private String lname;
     private IndividualType userType;
     private ProfileImage profileImage;
 

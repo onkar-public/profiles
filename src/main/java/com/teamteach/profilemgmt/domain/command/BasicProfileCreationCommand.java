@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 public class BasicProfileCreationCommand extends ValidatingCommand<BasicProfileCreationCommand> {
 
     @NotNull
-    String fName;
-    String lName;
+    String fname;
+    String lname;
     @NotNull
     String userId;
     String profileType;
