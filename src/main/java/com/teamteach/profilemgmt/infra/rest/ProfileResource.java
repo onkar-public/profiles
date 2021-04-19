@@ -37,7 +37,7 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     public ResponseEntity<ObjectResponseDto> addChild(AddChildCommand addChildCommand) {
         System.out.println(addChildCommand.getFname() + " " + addChildCommand.getLname());
         ProfileModel childProfile = profileMgmt.addChild(addChildCommand);
-        if (childProfile == null) {
+        if (childProfile.getFname() == null || childProfile.getFname() == "" ) {
             return ResponseEntity.ok(new ObjectResponseDto(false, "Child addition failed", addChildCommand));
         } else {
             return ResponseEntity.ok(new ObjectResponseDto(true, "Child added", addChildCommand));
