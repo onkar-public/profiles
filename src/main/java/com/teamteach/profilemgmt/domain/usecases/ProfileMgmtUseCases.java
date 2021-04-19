@@ -53,6 +53,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .fname(signUpCommand.getFname())
                                                 .lname(signUpCommand.getLname())
                                                 .userType(new IndividualType(ProfileTypes.Parent))
+                                                .relation(signUpCommand.getRelation())
                                                 .build();
         return profileRepository.saveProfile(profileModel);
     }
