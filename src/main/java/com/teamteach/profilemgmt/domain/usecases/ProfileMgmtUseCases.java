@@ -47,11 +47,6 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ProfileModel addChild(AddChildCommand addChildCommand) {
-        // Validate that the Parent Profile Id
-
-        // Check for duplicate children
-
-        //Add the child profile
         ProfileModel profileModel = ProfileModel.builder()
                                                 .userId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
                                                 .ownerId(addChildCommand.getParentId())

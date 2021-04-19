@@ -3,13 +3,14 @@ package com.teamteach.profilemgmt.infra.api;
 import com.teamteach.profilemgmt.domain.command.*;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
 import com.teamteach.profilemgmt.domain.models.ProfileModel;
+import com.teamteach.profilemgmt.domain.responses.ObjectResponseDto;
+
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-import java.util.Collections;
 
 @RequestMapping("profiles")
 public interface IProfileResource {
@@ -25,7 +26,7 @@ public interface IProfileResource {
 
     @ApiIgnore
     @PostMapping("child")
-    ResponseEntity<ProfileModel> addChild(@RequestBody @Valid AddChildCommand addChildCommand);
+    ResponseEntity<ObjectResponseDto> addChild(@RequestBody @Valid AddChildCommand addChildCommand);
 
     @ApiIgnore
     @GetMapping("{profileid}")
