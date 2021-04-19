@@ -74,13 +74,21 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ParentProfileResponseDto getProfile(String userId){
-        Query query = new Query(Criteria.where("userId").is(userId));
-        ProfileModel profileModel = mongoTemplate.findOne(query, ProfileModel.class);
+        Query query = new Query(Criteria.where("userId").is(userId).and("userType.type").is("Parent"));
+        ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
+        if (parentProfileModel == null) return null;
+        query = new Query(Criteria.where("userId").is(userId).and("userType.type").is("Child"));
+        List<ProfileModel> children = mongoTemplate.find(query, ProfileModel.class);
+        List<String> childIdList = new ArrayList<>();
+        for (ProfileModel child : children) {
+            childIdList.add(child.getProfileId());
+        }
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
-                                                                         .fname(profileModel.getFname())
-                                                                         .lname(profileModel.getLname())
-                                                                         .email(profileModel.getUserId())
-                                                                         .userType(profileModel.getUserType().getType().toString())
+                                                                         .fname(parentProfileModel.getFname())
+                                                                         .lname(parentProfileModel.getLname())
+                                                                         .email(parentProfileModel.getUserId())
+                                                                         .children(childIdList)
+                                                                         .userType(parentProfileModel.getUserType().getType().toString())
                                                                          .build();
         return parentProfile;                                                                
     }

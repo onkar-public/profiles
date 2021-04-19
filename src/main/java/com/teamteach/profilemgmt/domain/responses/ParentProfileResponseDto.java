@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 import com.teamteach.profilemgmt.domain.models.*;
 import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
 
@@ -15,7 +17,7 @@ public class ParentProfileResponseDto {
     private String lname;
     private String email;
     private String userType;
-    private String[] children;
+    private List<String> children;
     private String relation;
     private String mobile; 
 }
