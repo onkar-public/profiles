@@ -29,5 +29,5 @@ public interface IProfileResource {
     ResponseEntity<ObjectResponseDto> addChild(@RequestBody AddChildCommand addChildCommand);
 
     @GetMapping("{userId}")
-    ResponseEntity<ObjectResponseDto> getProfile(@RequestParam String userId);
+    ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String userId);
 }

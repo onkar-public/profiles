@@ -14,7 +14,7 @@ public class ParentProfileResponseDto {
     private String fname;
     private String lname;
     private String email;
-    private IndividualType userType;
+    private String userType;
     private String[] children;
     private String relation;
     private String mobile; 

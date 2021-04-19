@@ -79,7 +79,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .fname(profileModel.getFname())
                                                                          .lname(profileModel.getLname())
                                                                          .email(profileModel.getUserId())
-                                                                         .userType(profileModel.getUserType())
+                                                                         .userType(profileModel.getUserType().getType().toString())
                                                                          .build();
         return parentProfile;                                                                
     }
