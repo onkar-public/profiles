@@ -3,6 +3,7 @@ package com.teamteach.profilemgmt.infra.rest;
 import com.teamteach.profilemgmt.domain.command.AddChildCommand;
 import com.teamteach.profilemgmt.domain.ports.in.IProfileMgmt;
 import com.teamteach.profilemgmt.domain.responses.ObjectResponseDto;
+import com.teamteach.profilemgmt.domain.responses.ParentProfileResponseDto;
 import com.teamteach.profilemgmt.infra.api.IProfileResource;
 import com.teamteach.profilemgmt.shared.AbstractAppController;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
@@ -45,6 +46,7 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
 
     @Override
     public ResponseEntity<ObjectResponseDto> getProfile(String profileId) {
-        return ResponseEntity.ok(new ObjectResponseDto(true, "Success", null));
+        ParentProfileResponseDto parentProfile = null;
+        return ResponseEntity.ok(new ObjectResponseDto(true, "Success", parentProfile));
     }
 }
