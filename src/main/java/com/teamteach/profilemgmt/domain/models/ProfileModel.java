@@ -20,8 +20,8 @@ public class ProfileModel {
     public static final String SEQUENCE_NAME = "profiles_sequence";
 
     @Id
-    protected String userId;
-    private String ownerId;
+    protected String profileId;
+    private String userId;
     private String info;
     private String birthYear;
     private String fname;
