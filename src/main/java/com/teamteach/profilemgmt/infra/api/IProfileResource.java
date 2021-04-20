@@ -24,7 +24,6 @@ public interface IProfileResource {
     default void updateProfilePicture() {
     }
 
-    @ApiIgnore
     @PutMapping("edit/{profileId}")
     ResponseEntity<ObjectResponseDto> editProfile(@PathVariable String profileId, @RequestBody EditProfileCommand editProfileCommand);
 
