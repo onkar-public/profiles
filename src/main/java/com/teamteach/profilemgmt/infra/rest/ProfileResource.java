@@ -7,6 +7,7 @@ import com.teamteach.profilemgmt.domain.responses.ParentProfileResponseDto;
 import com.teamteach.profilemgmt.infra.api.IProfileResource;
 import com.teamteach.profilemgmt.shared.AbstractAppController;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
+import com.teamteach.profilemgmt.domain.command.EditProfileCommand;
 import com.teamteach.profilemgmt.domain.models.ProfileModel;
 
 import io.swagger.annotations.ApiOperation;
@@ -40,7 +41,7 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
         if (childProfile.getFname() == null || childProfile.getFname() == "" ) {
             return ResponseEntity.ok(new ObjectResponseDto(false, "Child addition failed", addChildCommand));
         } else {
-            return ResponseEntity.ok(new ObjectResponseDto(true, "Child added", addChildCommand));
+            return ResponseEntity.ok(new ObjectResponseDto(true, "Child added", childProfile));
         }
     }
 
@@ -48,5 +49,10 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     public ResponseEntity<ObjectResponseDto> getProfile(String userId) {
         ParentProfileResponseDto parentProfile = profileMgmt.getProfile(userId);
         return ResponseEntity.ok(new ObjectResponseDto(true, "Success", parentProfile));
+    }
+
+    @Override
+    public ResponseEntity<ObjectResponseDto> editProfile(String profileId, EditProfileCommand editProfileCommand) {
+        return ResponseEntity.ok(profileMgmt.editProfile(profileId,editProfileCommand));
     }
 }

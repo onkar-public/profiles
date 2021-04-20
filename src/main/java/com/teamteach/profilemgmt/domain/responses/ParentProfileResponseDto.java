@@ -13,6 +13,7 @@ import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
 @Builder
 @Data
 public class ParentProfileResponseDto {
+    private String profileId;
     private String fname;
     private String lname;
     private String email;

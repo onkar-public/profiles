@@ -28,6 +28,7 @@ public class ProfileModel {
     private String lname;
     private IndividualType userType;
     private String relation;
+    private String mobile;
     private ProfileImage profileImage;
 
     public void setProfileImage(ProfileImage profileImage) {

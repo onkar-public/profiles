@@ -8,7 +8,8 @@ import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
 import com.teamteach.commons.connectors.rabbit.core.IMessagingPort;
 import com.teamteach.profilemgmt.domain.usecases.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.teamteach.profilemgmt.domain.responses.ParentProfileResponseDto;
+
+import com.teamteach.profilemgmt.domain.responses.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -89,7 +90,25 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .email(parentProfileModel.getUserId())
                                                                          .children(childIdList)
                                                                          .userType(parentProfileModel.getUserType().getType().toString())
+                                                                         .profileId(parentProfileModel.getProfileId())
                                                                          .build();
         return parentProfile;                                                                
+    }
+
+    @Override
+    public ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand) {
+        Query query = new Query(Criteria.where("profileId").is(profileId));
+        ProfileModel editModel = mongoTemplate.findOne(query, ProfileModel.class);
+        editModel.setFname(editProfileCommand.getFname());
+        editModel.setLname(editProfileCommand.getLname());
+        if(editProfileCommand.getUserType() == "Parent") {
+            editModel.setMobile(editProfileCommand.getMobile());
+        }
+        mongoTemplate.save(editModel);
+        return ObjectResponseDto.builder()
+                                .success(true)
+                                .message("Profile edited successfully")
+                                .object(editModel)
+                                .build();
     }
 }
