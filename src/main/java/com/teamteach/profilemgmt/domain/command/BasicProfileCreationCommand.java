@@ -7,16 +7,17 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
-@Getter
+@Data
 public class BasicProfileCreationCommand extends ValidatingCommand<BasicProfileCreationCommand> {
 
     @NotNull
-    String fname;
-    String lname;
+    private String fname;
+    private String lname;
     @NotNull
-    String userId;
-    String profileType;
-    String relation;
+    private String userId;
+    private String profileType;
+    private String relation;
+    private String mobile;
     @Override
     protected void validateSelf() {
         super.validateSelf();
