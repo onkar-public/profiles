@@ -6,9 +6,6 @@ import lombok.experimental.Accessors;
 
 import java.util.List;
 
-import com.teamteach.profilemgmt.domain.models.*;
-import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
-
 @Accessors(chain = true)
 @Builder
 @Data

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.teamteach.profilemgmt.domain.responses.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -82,7 +81,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         List<ProfileModel> children = mongoTemplate.find(query, ProfileModel.class);
         List<String> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
-            childIdList.add(child.getProfileId());
+            childIdList.add(child.getFname());
         }
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
                                                                          .fname(parentProfileModel.getFname())

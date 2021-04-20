@@ -1,13 +1,11 @@
 package com.teamteach.profilemgmt.domain.command;
 
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @NoArgsConstructor
-@Getter
+@Data
 public class EditProfileCommand extends ValidatingCommand<BasicProfileCreationCommand> {
     private String mobile;
     private String fname;
