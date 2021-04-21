@@ -6,7 +6,6 @@ import com.teamteach.profilemgmt.domain.models.*;
 import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
 import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
 import com.teamteach.commons.connectors.rabbit.core.IMessagingPort;
-import com.teamteach.profilemgmt.domain.usecases.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.teamteach.profilemgmt.domain.responses.*;
@@ -17,7 +16,6 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
-import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -48,39 +46,47 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     };
 
     @Override
-    public ProfileModel createBasicProfile(BasicProfileCreationCommand signUpCommand) {
+    public ObjectResponseDto createBasicProfile(BasicProfileCreationCommand signUpCommand) {
         ProfileModel profileModel = ProfileModel.builder()
                                                 .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
-                                                .userId(signUpCommand.getUserId())
+                                                .ownerId(signUpCommand.getOwnerId())
                                                 .fname(signUpCommand.getFname())
                                                 .lname(signUpCommand.getLname())
                                                 .userType(new IndividualType(ProfileTypes.Parent))
                                                 .relation(signUpCommand.getRelation())
                                                 .mobile(signUpCommand.getMobile())
                                                 .build();
-        return profileRepository.saveProfile(profileModel);
+        return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
 
     @Override
-    public ProfileModel addChild(AddChildCommand addChildCommand) {
+    public ObjectResponseDto addChild(AddChildCommand addChildCommand) {
+        if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
+            return ObjectResponseDto.builder()
+            .success(false)
+            .message("Please provide at least the ownerId and fname in the requestBody")
+            .object(addChildCommand)
+            .build();
+        }
         ProfileModel profileModel = ProfileModel.builder()
                                                 .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
-                                                .userId(addChildCommand.getOwnerId())
+                                                .ownerId(addChildCommand.getOwnerId())
                                                 .fname(addChildCommand.getFname())
                                                 .lname(addChildCommand.getLname())
                                                 .birthYear(addChildCommand.getBirthYear())
                                                 .info(addChildCommand.getInfo())
                                                 .userType(new IndividualType(ProfileTypes.Child))
                                                 .build();
-        return profileRepository.addChild(profileModel);
+        return new ObjectResponseDto(true, "Success", profileRepository.addChild(profileModel));
+
     }
 
     @Override
     public ParentProfileResponseDto getProfile(String ownerId){
-        Query query = new Query(Criteria.where("userId").is(ownerId).and("userType.type").is("Parent"));
+        Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
         ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
         if (parentProfileModel == null) return null;
-        query = new Query(Criteria.where("userId").is(ownerId).and("userType.type").is("Child"));
+        query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Child"));
         List<ProfileModel> children = mongoTemplate.find(query, ProfileModel.class);
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
@@ -89,7 +95,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
                                                                          .fname(parentProfileModel.getFname())
                                                                          .lname(parentProfileModel.getLname())
-                                                                         .email(parentProfileModel.getUserId())
+                                                                         .email(parentProfileModel.getOwnerId())
                                                                          .children(childIdList)
                                                                          .userType(parentProfileModel.getUserType().getType().toString())
                                                                          .profileId(parentProfileModel.getProfileId())

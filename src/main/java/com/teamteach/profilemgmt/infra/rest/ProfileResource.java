@@ -29,20 +29,15 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     @Override
     @ApiIgnore
     @ApiOperation(value = "Creates the Basic Profile of an Individual", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<ProfileModel> createBasicProfile(@Valid BasicProfileCreationCommand profileCreationCommand) {
+    public ResponseEntity<ObjectResponseDto> createBasicProfile(@Valid BasicProfileCreationCommand profileCreationCommand) {
         return ResponseEntity.ok(profileMgmt.createBasicProfile(profileCreationCommand));
     }
 
     @Override
     @ApiOperation(value = "Adds new child of a Parent", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ObjectResponseDto> addChild(AddChildCommand addChildCommand) {
-        System.out.println(addChildCommand.getFname() + " " + addChildCommand.getLname());
-        ProfileModel childProfile = profileMgmt.addChild(addChildCommand);
-        if (childProfile.getFname() == null || childProfile.getFname() == "" ) {
-            return ResponseEntity.ok(new ObjectResponseDto(false, "Child addition failed", addChildCommand));
-        } else {
-            return ResponseEntity.ok(new ObjectResponseDto(true, "Child added", childProfile));
-        }
+        ObjectResponseDto childProfile = profileMgmt.addChild(addChildCommand);
+        return ResponseEntity.ok(childProfile);
     }
 
     @Override

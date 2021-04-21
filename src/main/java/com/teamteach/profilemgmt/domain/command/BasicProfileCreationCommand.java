@@ -14,7 +14,7 @@ public class BasicProfileCreationCommand extends ValidatingCommand<BasicProfileC
     private String fname;
     private String lname;
     @NotNull
-    private String userId;
+    private String ownerId;
     private String profileType;
     private String relation;
     private String mobile;

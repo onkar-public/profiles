@@ -17,7 +17,7 @@ public interface IProfileResource {
 
     @ApiIgnore
     @PostMapping("create")
-    ResponseEntity<ProfileModel> createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
+    ResponseEntity<ObjectResponseDto> createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
 
     @ApiIgnore
     @PostMapping("{profileid}/picture")

@@ -21,7 +21,7 @@ public class ProfileModel {
 
     @Id
     protected String profileId;
-    private String userId;
+    private String ownerId;
     private String info;
     private String birthYear;
     private String fname;
