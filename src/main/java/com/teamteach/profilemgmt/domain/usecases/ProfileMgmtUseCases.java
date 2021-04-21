@@ -82,9 +82,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         if (parentProfileModel == null) return null;
         query = new Query(Criteria.where("userId").is(userId).and("userType.type").is("Child"));
         List<ProfileModel> children = mongoTemplate.find(query, ProfileModel.class);
-        List<String> childIdList = new ArrayList<>();
+        List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
-            childIdList.add(child.getFname());
+            childIdList.add(new ChildProfileDto(child.getProfileId(), child.getFname()));
         }
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
                                                                          .fname(parentProfileModel.getFname())
