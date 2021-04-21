@@ -65,7 +65,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     public ProfileModel addChild(AddChildCommand addChildCommand) {
         ProfileModel profileModel = ProfileModel.builder()
                                                 .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
-                                                .userId(addChildCommand.getParentId())
+                                                .userId(addChildCommand.getOwnerId())
                                                 .fname(addChildCommand.getFname())
                                                 .lname(addChildCommand.getLname())
                                                 .birthYear(addChildCommand.getBirthYear())
@@ -76,11 +76,11 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public ParentProfileResponseDto getProfile(String userId){
-        Query query = new Query(Criteria.where("userId").is(userId).and("userType.type").is("Parent"));
+    public ParentProfileResponseDto getProfile(String ownerId){
+        Query query = new Query(Criteria.where("userId").is(ownerId).and("userType.type").is("Parent"));
         ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
         if (parentProfileModel == null) return null;
-        query = new Query(Criteria.where("userId").is(userId).and("userType.type").is("Child"));
+        query = new Query(Criteria.where("userId").is(ownerId).and("userType.type").is("Child"));
         List<ProfileModel> children = mongoTemplate.find(query, ProfileModel.class);
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {

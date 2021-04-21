@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class AddChildCommand extends ValidatingCommand<BasicProfileCreationCommand>{
     @NotNull
-    private String parentId;
+    private String ownerId;
     private String fname;
     private String lname;
     private String birthYear;

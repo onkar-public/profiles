@@ -30,6 +30,6 @@ public interface IProfileResource {
     @PostMapping("child")
     ResponseEntity<ObjectResponseDto> addChild(@RequestBody AddChildCommand addChildCommand);
 
-    @GetMapping("{userId}")
-    ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String userId);
+    @GetMapping("owner/{ownerId}")
+    ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String ownerId);
 }
