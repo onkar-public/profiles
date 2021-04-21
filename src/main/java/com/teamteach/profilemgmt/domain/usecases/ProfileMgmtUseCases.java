@@ -121,7 +121,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         if (editProfileCommand.getLname() != null) {
             editModel.setLname(editProfileCommand.getLname());
         }
-        if(!editProfileCommand.getUserType().equals("Child")) {
+        if(!editProfileCommand.getUserType().equals("Child") && editProfileCommand.getMobile() != null) {
             editModel.setMobile(editProfileCommand.getMobile());
         }
         mongoTemplate.save(editModel);
