@@ -101,7 +101,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         ProfileModel editModel = mongoTemplate.findOne(query, ProfileModel.class);
         editModel.setFname(editProfileCommand.getFname());
         editModel.setLname(editProfileCommand.getLname());
-        if(editProfileCommand.getUserType() == "Parent") {
+        if(editProfileCommand.getUserType().equals("Parent")) {
             editModel.setMobile(editProfileCommand.getMobile());
         }
         mongoTemplate.save(editModel);
