@@ -17,6 +17,8 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
+import javax.swing.tree.DefaultTreeCellEditor.EditorContainer;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.*;
@@ -97,11 +99,29 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand) {
-        Query query = new Query(Criteria.where("profileId").is(profileId));
+        if (editProfileCommand.getUserType() == null) {
+            return ObjectResponseDto.builder()
+            .success(false)
+            .message("Please provide userType in the requestBody")
+            .object(editProfileCommand)
+            .build();
+        }
+        Query query = new Query(Criteria.where("profileId").is(profileId).and("userType.type").is(editProfileCommand.getUserType()));
         ProfileModel editModel = mongoTemplate.findOne(query, ProfileModel.class);
-        editModel.setFname(editProfileCommand.getFname());
-        editModel.setLname(editProfileCommand.getLname());
-        if(editProfileCommand.getUserType().equals("Parent")) {
+        if (editModel == null) {
+            return ObjectResponseDto.builder()
+            .success(false)
+            .message("No profile record found with given profileId and userType")
+            .object(editModel)
+            .build();
+        }
+        if (editProfileCommand.getFname() != null) {
+            editModel.setFname(editProfileCommand.getFname());
+        }
+        if (editProfileCommand.getLname() != null) {
+            editModel.setLname(editProfileCommand.getLname());
+        }
+        if(!editProfileCommand.getUserType().equals("Child")) {
             editModel.setMobile(editProfileCommand.getMobile());
         }
         mongoTemplate.save(editModel);
