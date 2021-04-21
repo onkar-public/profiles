@@ -24,7 +24,7 @@ public interface IProfileResource {
     default void updateProfilePicture() {
     }
 
-    @PutMapping("edit/{profileId}")
+    @PutMapping("{profileId}")
     ResponseEntity<ObjectResponseDto> editProfile(@PathVariable String profileId, @RequestBody EditProfileCommand editProfileCommand);
 
     @PostMapping("child")
