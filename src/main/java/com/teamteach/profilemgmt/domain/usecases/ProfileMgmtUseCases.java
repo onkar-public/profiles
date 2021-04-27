@@ -51,6 +51,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
                                                 .ownerId(signUpCommand.getOwnerId())
                                                 .fname(signUpCommand.getFname())
+                                                .email(signUpCommand.getEmail())
                                                 .lname(signUpCommand.getLname())
                                                 .userType(new IndividualType(ProfileTypes.Parent))
                                                 .relation(signUpCommand.getRelation())

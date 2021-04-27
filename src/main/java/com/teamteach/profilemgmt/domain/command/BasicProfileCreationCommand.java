@@ -13,6 +13,7 @@ public class BasicProfileCreationCommand extends ValidatingCommand<BasicProfileC
     @NotNull
     private String fname;
     private String lname;
+    private String email;
     @NotNull
     private String ownerId;
     private String profileType;
