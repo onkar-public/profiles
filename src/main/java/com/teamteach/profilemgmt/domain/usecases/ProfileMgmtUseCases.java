@@ -96,7 +96,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
                                                                          .fname(parentProfileModel.getFname())
                                                                          .lname(parentProfileModel.getLname())
-                                                                         .email(parentProfileModel.getOwnerId())
+                                                                         .email(parentProfileModel.getEmail())
                                                                          .mobile(parentProfileModel.getMobile())
                                                                          .children(childIdList)
                                                                          .userType(parentProfileModel.getUserType().getType().toString())

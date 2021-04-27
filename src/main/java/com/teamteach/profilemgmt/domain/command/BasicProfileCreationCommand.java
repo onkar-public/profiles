@@ -1,8 +1,6 @@
 package com.teamteach.profilemgmt.domain.command;
 
-import lombok.Getter;
 import lombok.Data;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotNull;
 
