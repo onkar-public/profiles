@@ -98,6 +98,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .lname(parentProfileModel.getLname())
                                                                          .email(parentProfileModel.getEmail())
                                                                          .mobile(parentProfileModel.getMobile())
+                                                                         .relation(parentProfileModel.getRelation())
                                                                          .children(childIdList)
                                                                          .userType(parentProfileModel.getUserType().getType().toString())
                                                                          .profileId(parentProfileModel.getProfileId())
