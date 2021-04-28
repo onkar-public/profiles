@@ -11,4 +11,5 @@ public class EditProfileCommand extends ValidatingCommand<BasicProfileCreationCo
     private String fname;
     private String lname;
     private String userType;
+    private String relation;
 }
