@@ -130,10 +130,10 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             editModel.setLname(editProfileCommand.getLname());
         }
         if (editProfileCommand.getEmail() != null) {
-            editModel.setLname(editProfileCommand.getEmail());
+            editModel.setEmail(editProfileCommand.getEmail());
         }
         if (editProfileCommand.getRelation() != null) {
-            editModel.setLname(editProfileCommand.getRelation());
+            editModel.setRelation(editProfileCommand.getRelation());
         }
         if(!editProfileCommand.getUserType().equals("Child") && editProfileCommand.getMobile() != null) {
             editModel.setMobile(editProfileCommand.getMobile());
