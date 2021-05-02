@@ -56,6 +56,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .userType(new IndividualType(ProfileTypes.Parent))
                                                 .relation(signUpCommand.getRelation())
                                                 .mobile(signUpCommand.getMobile())
+                                                .countryCode("")
                                                 .build();
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
@@ -69,16 +70,22 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             .object(addChildCommand)
             .build();
         }
-        ProfileModel profileModel = ProfileModel.builder()
-                                                .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
-                                                .ownerId(addChildCommand.getOwnerId())
-                                                .fname(addChildCommand.getFname())
-                                                .lname(addChildCommand.getLname())
-                                                .birthYear(addChildCommand.getBirthYear())
-                                                .info(addChildCommand.getInfo())
-                                                .userType(new IndividualType(ProfileTypes.Child))
-                                                .build();
-        return new ObjectResponseDto(true, "Success", profileRepository.addChild(profileModel));
+        Query query = new Query(Criteria.where("ownerId").is(addChildCommand.getOwnerId()).and("fname").is(addChildCommand.getFname()));
+        ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
+        if(findChild == null) {
+            ProfileModel profileModel = ProfileModel.builder()
+                                                    .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
+                                                    .ownerId(addChildCommand.getOwnerId())
+                                                    .fname(addChildCommand.getFname())
+                                                    .lname(addChildCommand.getLname())
+                                                    .birthYear(addChildCommand.getBirthYear())
+                                                    .info(addChildCommand.getInfo())
+                                                    .userType(new IndividualType(ProfileTypes.Child))
+                                                    .build();
+            return new ObjectResponseDto(true, "Success", profileRepository.addChild(profileModel));
+        } else {
+            return new ObjectResponseDto(false, "Child with same name cannot be added", null);
+        }
 
     }
 
@@ -98,6 +105,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .lname(parentProfileModel.getLname())
                                                                          .email(parentProfileModel.getEmail())
                                                                          .mobile(parentProfileModel.getMobile())
+                                                                         .countryCode(parentProfileModel.getCountryCode())
                                                                          .relation(parentProfileModel.getRelation())
                                                                          .children(childIdList)
                                                                          .userType(parentProfileModel.getUserType().getType().toString())
@@ -135,6 +143,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
         if (editProfileCommand.getRelation() != null) {
             editModel.setRelation(editProfileCommand.getRelation());
+        }
+        if (editProfileCommand.getCountryCode() != null) {
+            editModel.setCountryCode(editProfileCommand.getCountryCode());
         }
         if(!editProfileCommand.getUserType().equals("Child") && editProfileCommand.getMobile() != null) {
             editModel.setMobile(editProfileCommand.getMobile());

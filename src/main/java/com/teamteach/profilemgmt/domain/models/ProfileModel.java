@@ -31,6 +31,7 @@ public class ProfileModel {
     private String relation;
     private String mobile;
     private ProfileImage profileImage;
+    private String countryCode;
 
     public void setProfileImage(ProfileImage profileImage) {
         this.profileImage = profileImage;
