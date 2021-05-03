@@ -2,6 +2,7 @@ package com.teamteach.profilemgmt.infra.persistence.dal;
 
 import com.teamteach.profilemgmt.domain.models.ProfileModel;
 import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
+import com.teamteach.profilemgmt.domain.command.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -11,7 +12,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @RequiredArgsConstructor
 public class ProfileDAL  implements IProfileRepository {
     final MongoTemplate mongoTemplate;
-
+    
     @Override
     public boolean profileExistsById(String profileId) {
         return true;
@@ -28,7 +29,14 @@ public class ProfileDAL  implements IProfileRepository {
     }
 
     @Override
-    public void saveProfile(ProfileModel profileModel) {
-        mongoTemplate.save(profileModel);
+    public ProfileModel saveProfile(ProfileModel profileModel) {
+        ProfileModel newModel = mongoTemplate.save(profileModel);
+        return newModel;
+    }
+
+    @Override
+    public ProfileModel addChild(ProfileModel profileModel){
+        ProfileModel newChildModel = mongoTemplate.save(profileModel);
+        return newChildModel;
     }
 }

@@ -3,6 +3,9 @@ package com.teamteach.profilemgmt.domain.models.vo;
 
 import com.teamteach.profilemgmt.domain.models.ProfileTypes;
 
+import lombok.Getter;
+
+@Getter
 public class IndividualType {
     ProfileTypes type;
 

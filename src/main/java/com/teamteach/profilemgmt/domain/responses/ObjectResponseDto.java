@@ -1,0 +1,25 @@
+package com.teamteach.profilemgmt.domain.responses;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.experimental.Accessors;
+
+@Accessors(chain = true)
+@Data
+public class ObjectResponseDto {
+    private final boolean success;
+    private final String message;
+    private Object object;
+
+    public ObjectResponseDto(){
+        this.success = false;
+        this.message = "";
+    }
+
+    @Builder
+    public ObjectResponseDto(boolean success, String message, Object object) {
+        this.success = success;
+        this.message = message;
+        this.object = object;
+    }
+}

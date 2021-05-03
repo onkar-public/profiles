@@ -1,9 +1,11 @@
 package com.teamteach.profilemgmt.domain.ports.in;
 
-import com.teamteach.profilemgmt.domain.command.AddChildrenCommand;
-import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
+import com.teamteach.profilemgmt.domain.command.*;
+import com.teamteach.profilemgmt.domain.responses.*;
 
 public interface IProfileMgmt {
-    void createBasicProfile(BasicProfileCreationCommand signUpCommand);
-    void addChildren(String parentrofileId, AddChildrenCommand addChildrenCommand);
+    ObjectResponseDto createBasicProfile(BasicProfileCreationCommand signUpCommand);
+    ObjectResponseDto addChild(AddChildCommand addChildCommand);
+    ParentProfileResponseDto getProfile(String ownerId);
+    ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand);
 }

@@ -10,6 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan({
 		"com.teamteach.commons.security",
+		"com.teamteach.commons.exceptions",
+		"com.teamteach.commons.connectors",
 		"com.teamteach.profilemgmt"
 })
 @EnableConfigurationProperties({JwtConfig.class, KeyConfig.class})

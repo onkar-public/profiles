@@ -1,31 +1,35 @@
 package com.teamteach.profilemgmt.infra.api;
 
-import com.teamteach.profilemgmt.domain.command.AddChildrenCommand;
+import com.teamteach.profilemgmt.domain.command.*;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
+import com.teamteach.profilemgmt.domain.models.ProfileModel;
+import com.teamteach.profilemgmt.domain.responses.ObjectResponseDto;
+
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
-import java.util.Collections;
 
-@RequestMapping("")
+@RequestMapping("profiles")
 public interface IProfileResource {
 
+    @ApiIgnore
     @PostMapping("create")
-    void createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
+    ResponseEntity<ObjectResponseDto> createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
 
+    @ApiIgnore
     @PostMapping("{profileid}/picture")
     default void updateProfilePicture() {
-
     }
 
-    @PostMapping("{profileid}/children")
-    default void addChildren( @PathVariable String profileid, @RequestBody @Valid AddChildrenCommand addChildrenCommand) {
+    @PutMapping("{profileId}")
+    ResponseEntity<ObjectResponseDto> editProfile(@PathVariable String profileId, @RequestBody EditProfileCommand editProfileCommand);
 
-    }
+    @PostMapping("child")
+    ResponseEntity<ObjectResponseDto> addChild(@RequestBody AddChildCommand addChildCommand);
 
-    @GetMapping("{profileid}")
-    default void getProfileById(@PathVariable String profileid) {
-
-    }
-
+    @GetMapping("owner/{ownerId}")
+    ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String ownerId);
 }

@@ -1,5 +1,6 @@
 package com.teamteach.profilemgmt.infra.config;
 
+import com.teamteach.commons.connectors.rabbit.core.IMessagingPort;
 import com.teamteach.profilemgmt.domain.ports.in.IProfileMgmt;
 import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
 import com.teamteach.profilemgmt.domain.usecases.ProfileMgmtUseCases;
@@ -15,11 +16,12 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 public class ApplicationBeanConfig {
 
     final IProfileRepository profileRepository;
+    final IMessagingPort messagingPort;
     final MongoTemplate mongoTemplate;
 
     @Bean("profileMgmtSvc")
     IProfileMgmt profileMgmt() {
-        return new ProfileMgmtUseCases(profileRepository);
+        return new ProfileMgmtUseCases(profileRepository, messagingPort);
     }
     @Bean("profileDALayer")
     IProfileRepository profileDAL() {
