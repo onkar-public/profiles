@@ -32,6 +32,7 @@ public class ProfileModel {
     private String mobile;
     private ProfileImage profileImage;
     private String countryCode;
+    private String timezone;
 
     public void setProfileImage(ProfileImage profileImage) {
         this.profileImage = profileImage;

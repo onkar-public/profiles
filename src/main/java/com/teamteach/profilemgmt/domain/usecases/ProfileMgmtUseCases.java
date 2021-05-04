@@ -51,13 +51,13 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
                                                 .ownerId(signUpCommand.getOwnerId())
                                                 .fname(signUpCommand.getFname())
-                                                .email(signUpCommand.getEmail())
+                                                .email("")
                                                 .lname(signUpCommand.getLname())
                                                 .userType(new IndividualType(ProfileTypes.Parent))
-                                                .relation(signUpCommand.getRelation())
+                                                .relation("")
                                                 .mobile(signUpCommand.getMobile())
-                                                .countryCode("")
                                                 .build();
+        System.out.println(profileModel);                                      
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
 
@@ -106,6 +106,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .email(parentProfileModel.getEmail())
                                                                          .mobile(parentProfileModel.getMobile())
                                                                          .countryCode(parentProfileModel.getCountryCode())
+                                                                         .timezone(parentProfileModel.getTimezone())
                                                                          .relation(parentProfileModel.getRelation())
                                                                          .children(childIdList)
                                                                          .userType(parentProfileModel.getUserType().getType().toString())
@@ -146,6 +147,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
         if (editProfileCommand.getCountryCode() != null) {
             editModel.setCountryCode(editProfileCommand.getCountryCode());
+        }
+        if (editProfileCommand.getTimezone() != null) {
+            editModel.setTimezone(editProfileCommand.getTimezone());
         }
         if(!editProfileCommand.getUserType().equals("Child") && editProfileCommand.getMobile() != null) {
             editModel.setMobile(editProfileCommand.getMobile());

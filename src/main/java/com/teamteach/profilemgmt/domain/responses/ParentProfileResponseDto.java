@@ -19,4 +19,5 @@ public class ParentProfileResponseDto {
     private String relation;
     private String mobile; 
     private String countryCode;
+    private String timezone;
 }
