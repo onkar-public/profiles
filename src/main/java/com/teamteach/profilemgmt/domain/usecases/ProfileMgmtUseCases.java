@@ -139,21 +139,31 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         if (editProfileCommand.getLname() != null) {
             editModel.setLname(editProfileCommand.getLname());
         }
-        if (editProfileCommand.getEmail() != null) {
-            editModel.setEmail(editProfileCommand.getEmail());
+        if(!editProfileCommand.getUserType().equals("Child")){
+            if (editProfileCommand.getEmail() != null) {
+                editModel.setEmail(editProfileCommand.getEmail());
+            }
+            if (editProfileCommand.getRelation() != null) {
+                editModel.setRelation(editProfileCommand.getRelation());
+            }
+            if (editProfileCommand.getCountryCode() != null) {
+                editModel.setCountryCode(editProfileCommand.getCountryCode());
+            }
+            if (editProfileCommand.getTimezone() != null) {
+                editModel.setTimezone(editProfileCommand.getTimezone());
+            }
+            if(editProfileCommand.getMobile() != null) {
+                editModel.setMobile(editProfileCommand.getMobile());
+            }
+        } else {
+            if (editProfileCommand.getBirthYear() != null) {
+                editModel.setBirthYear(editProfileCommand.getBirthYear());
+            }
+            if (editProfileCommand.getInfo() != null) {
+                editModel.setInfo(editProfileCommand.getInfo());
+            }
         }
-        if (editProfileCommand.getRelation() != null) {
-            editModel.setRelation(editProfileCommand.getRelation());
-        }
-        if (editProfileCommand.getCountryCode() != null) {
-            editModel.setCountryCode(editProfileCommand.getCountryCode());
-        }
-        if (editProfileCommand.getTimezone() != null) {
-            editModel.setTimezone(editProfileCommand.getTimezone());
-        }
-        if(!editProfileCommand.getUserType().equals("Child") && editProfileCommand.getMobile() != null) {
-            editModel.setMobile(editProfileCommand.getMobile());
-        }
+        
         mongoTemplate.save(editModel);
         return ObjectResponseDto.builder()
                                 .success(true)
