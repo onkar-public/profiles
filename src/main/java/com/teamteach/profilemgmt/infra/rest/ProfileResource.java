@@ -8,6 +8,7 @@ import com.teamteach.profilemgmt.infra.api.IProfileResource;
 import com.teamteach.profilemgmt.shared.AbstractAppController;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
 import com.teamteach.profilemgmt.domain.command.EditProfileCommand;
+import com.teamteach.profilemgmt.domain.models.ProfileModel;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -57,7 +58,6 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
 
     @Override
     public ResponseEntity<ObjectResponseDto> editProfileImage(String profileId, MultipartFile file) {
-        String url = profileMgmt.saveTeamTeachFile(file, profileId);
-		return ResponseEntity.ok(new ObjectResponseDto(true, "Success", url));
+		return ResponseEntity.ok(profileMgmt.saveTeamTeachFile(file, profileId));
     }
 }

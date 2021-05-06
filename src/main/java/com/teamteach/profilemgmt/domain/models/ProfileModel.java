@@ -1,7 +1,6 @@
 package com.teamteach.profilemgmt.domain.models;
 
 import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
-import com.teamteach.profilemgmt.domain.models.vo.ProfileImage;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -30,11 +29,11 @@ public class ProfileModel {
     private IndividualType userType;
     private String relation;
     private String mobile;
-    private ProfileImage profileImage;
+    private String profileImage;
     private String countryCode;
     private String timezone;
 
-    public void setProfileImage(ProfileImage profileImage) {
-        this.profileImage = profileImage;
-    }
+    // public void setProfileImage(ProfileImage profileImage) {
+    //     this.profileImage = profileImage;
+    // }
 }

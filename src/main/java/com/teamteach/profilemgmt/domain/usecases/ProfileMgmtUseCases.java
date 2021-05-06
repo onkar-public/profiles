@@ -181,15 +181,33 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public String saveTeamTeachFile(MultipartFile file, String id) {
+    public ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id) {
+        Query query = new Query(Criteria.where("profileId").is(id));
+        ProfileModel pictureModel = mongoTemplate.findOne(query, ProfileModel.class);
+        if (pictureModel == null) {
+            return ObjectResponseDto.builder()
+                                    .success(false)
+                                    .message("No profile record found with given profileId")
+                                    .object(pictureModel)
+                                    .build();
+        }
         String url = null;
         try {
             String fileExt = FilenameUtils.getExtension(file.getOriginalFilename()).replaceAll("\\s", "");
             String fileName = "profile_"+id+"."+fileExt;
-            url = fileUploadService.saveTeamTeachFile("profiles", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(file.getInputStream()));
+            url = fileUploadService.saveTeamTeachFile("profileImages", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(file.getInputStream()));
         } catch (IOException ioe) {
-            return ioe.getMessage();
+            return ObjectResponseDto.builder()
+                                    .success(false)
+                                    .message(ioe.getMessage())
+                                    .build();
         }
-        return url;
+        pictureModel.setProfileImage(url);
+        mongoTemplate.save(pictureModel);
+        return ObjectResponseDto.builder()
+                                .success(true)
+                                .message("Profile image added successfully")
+                                .object(pictureModel)
+                                .build();
     }
 }

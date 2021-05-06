@@ -15,4 +15,5 @@ public class AddChildCommand extends ValidatingCommand<BasicProfileCreationComma
     private String lname;
     private String birthYear;
     private String info;
+    private String profileImage;
 }
