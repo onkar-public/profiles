@@ -119,6 +119,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .children(childIdList)
                                                                          .userType(parentProfileModel.getUserType().getType().toString())
                                                                          .profileId(parentProfileModel.getProfileId())
+                                                                         .profileImage(parentProfileModel.getProfileImage())
                                                                          .build();
         return parentProfile;                                                                
     }

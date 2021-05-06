@@ -20,4 +20,5 @@ public class ParentProfileResponseDto {
     private String mobile; 
     private String countryCode;
     private String timezone;
+    private String profileImage;
 }
