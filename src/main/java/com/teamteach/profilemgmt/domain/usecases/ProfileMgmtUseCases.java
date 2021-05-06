@@ -6,6 +6,9 @@ import com.teamteach.profilemgmt.domain.models.*;
 import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
 import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
 import com.teamteach.commons.connectors.rabbit.core.IMessagingPort;
+
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.teamteach.profilemgmt.domain.responses.*;
@@ -13,12 +16,14 @@ import com.teamteach.profilemgmt.domain.responses.*;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -26,6 +31,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     final IProfileRepository profileRepository;
     final IMessagingPort messagingPort;
+
+    @Autowired
+    private FileUploadService fileUploadService;
 
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
@@ -170,5 +178,18 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                 .message("Profile edited successfully")
                                 .object(editModel)
                                 .build();
+    }
+
+    @Override
+    public String saveTeamTeachFile(MultipartFile file, String id) {
+        String url = null;
+        try {
+            String fileExt = FilenameUtils.getExtension(file.getOriginalFilename()).replaceAll("\\s", "");
+            String fileName = "profile_"+id+"."+fileExt;
+            url = fileUploadService.saveTeamTeachFile("profiles", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(file.getInputStream()));
+        } catch (IOException ioe) {
+            return ioe.getMessage();
+        }
+        return url;
     }
 }

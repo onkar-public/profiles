@@ -8,7 +8,6 @@ import com.teamteach.profilemgmt.infra.api.IProfileResource;
 import com.teamteach.profilemgmt.shared.AbstractAppController;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
 import com.teamteach.profilemgmt.domain.command.EditProfileCommand;
-import com.teamteach.profilemgmt.domain.models.ProfileModel;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -16,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import springfox.documentation.annotations.ApiIgnore;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
@@ -53,5 +53,11 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     @Override
     public ResponseEntity<ObjectResponseDto> editProfile(String profileId, EditProfileCommand editProfileCommand) {
         return ResponseEntity.ok(profileMgmt.editProfile(profileId,editProfileCommand));
+    }
+
+    @Override
+	public ResponseEntity<ObjectResponseDto> uploadProfileImage(MultipartFile file, String id) {
+        String url = profileMgmt.saveTeamTeachFile(file, id);
+		return ResponseEntity.ok(new ObjectResponseDto(true, "Success", url));
     }
 }

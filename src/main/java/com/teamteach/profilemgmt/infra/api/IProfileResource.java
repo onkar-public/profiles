@@ -2,12 +2,13 @@ package com.teamteach.profilemgmt.infra.api;
 
 import com.teamteach.profilemgmt.domain.command.*;
 import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
-import com.teamteach.profilemgmt.domain.models.ProfileModel;
 import com.teamteach.profilemgmt.domain.responses.ObjectResponseDto;
 
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
@@ -21,8 +22,7 @@ public interface IProfileResource {
 
     @ApiIgnore
     @PostMapping("{profileid}/picture")
-    default void updateProfilePicture() {
-    }
+    ResponseEntity<ObjectResponseDto> uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable String profileid);
 
     @PutMapping("{profileId}")
     ResponseEntity<ObjectResponseDto> editProfile(@PathVariable String profileId, @RequestBody EditProfileCommand editProfileCommand);
