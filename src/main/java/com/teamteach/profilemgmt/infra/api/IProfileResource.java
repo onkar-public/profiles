@@ -20,12 +20,11 @@ public interface IProfileResource {
     @PostMapping("create")
     ResponseEntity<ObjectResponseDto> createBasicProfile( @RequestBody @Valid BasicProfileCreationCommand userSignup);
 
-    @ApiIgnore
-    @PostMapping("{profileid}/picture")
-    ResponseEntity<ObjectResponseDto> uploadProfileImage(@RequestParam("file") MultipartFile file, @PathVariable String profileid);
-
     @PutMapping("{profileId}")
     ResponseEntity<ObjectResponseDto> editProfile(@PathVariable String profileId, @RequestBody EditProfileCommand editProfileCommand);
+
+    @PostMapping("picture/{profileId}")
+    ResponseEntity<ObjectResponseDto> editProfileImage(@PathVariable String profileId, @RequestParam("file") MultipartFile file);
 
     @PostMapping("child")
     ResponseEntity<ObjectResponseDto> addChild(@RequestBody AddChildCommand addChildCommand);

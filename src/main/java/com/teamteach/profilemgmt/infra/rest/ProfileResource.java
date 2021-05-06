@@ -52,12 +52,12 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
 
     @Override
     public ResponseEntity<ObjectResponseDto> editProfile(String profileId, EditProfileCommand editProfileCommand) {
-        return ResponseEntity.ok(profileMgmt.editProfile(profileId,editProfileCommand));
+		return ResponseEntity.ok(profileMgmt.editProfile(profileId,editProfileCommand));
     }
 
     @Override
-	public ResponseEntity<ObjectResponseDto> uploadProfileImage(MultipartFile file, String id) {
-        String url = profileMgmt.saveTeamTeachFile(file, id);
+    public ResponseEntity<ObjectResponseDto> editProfileImage(String profileId, MultipartFile file) {
+        String url = profileMgmt.saveTeamTeachFile(file, profileId);
 		return ResponseEntity.ok(new ObjectResponseDto(true, "Success", url));
     }
 }
