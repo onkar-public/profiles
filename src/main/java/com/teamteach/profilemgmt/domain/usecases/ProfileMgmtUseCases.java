@@ -108,6 +108,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         for (ProfileModel child : children) {
             childIdList.add(new ChildProfileDto(child.getProfileId(), child.getFname(), child.getBirthYear(), child.getInfo()));
         }
+
+        String[] timezones = TimeZone.getAvailableIDs();
+
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
                                                                          .fname(parentProfileModel.getFname())
                                                                          .lname(parentProfileModel.getLname())
@@ -120,6 +123,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .userType(parentProfileModel.getUserType().getType().toString())
                                                                          .profileId(parentProfileModel.getProfileId())
                                                                          .profileImage(parentProfileModel.getProfileImage())
+                                                                         .timezones(timezones)
                                                                          .build();
         return parentProfile;                                                                
     }

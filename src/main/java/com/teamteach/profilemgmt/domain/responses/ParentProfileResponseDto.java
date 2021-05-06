@@ -4,7 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.List;
+import java.util.*;
 
 @Accessors(chain = true)
 @Builder
@@ -21,4 +21,6 @@ public class ParentProfileResponseDto {
     private String countryCode;
     private String timezone;
     private String profileImage;
+    private String[] timezones;
+   
 }
