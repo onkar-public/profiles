@@ -74,33 +74,33 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
 
-    @Override
-    public ObjectResponseDto addChild(AddChildCommand addChildCommand) {
-        if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
-            return ObjectResponseDto.builder()
-            .success(false)
-            .message("Please provide at least the ownerId and fname in the requestBody")
-            .object(addChildCommand)
-            .build();
-        }
-        Query query = new Query(Criteria.where("ownerId").is(addChildCommand.getOwnerId()).and("fname").is(addChildCommand.getFname()));
-        ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
-        if(findChild == null) {
-            ProfileModel profileModel = ProfileModel.builder()
-                                                    .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
-                                                    .ownerId(addChildCommand.getOwnerId())
-                                                    .fname(addChildCommand.getFname())
-                                                    .lname(addChildCommand.getLname())
-                                                    .birthYear(addChildCommand.getBirthYear())
-                                                    .info(addChildCommand.getInfo())
-                                                    .userType(new IndividualType(ProfileTypes.Child))
-                                                    .build();
-            return new ObjectResponseDto(true, "Success", profileRepository.addChild(profileModel));
-        } else {
-            return new ObjectResponseDto(false, "Child with same name cannot be added", null);
-        }
+    // @Override
+    // public ObjectResponseDto addChild(AddChildCommand addChildCommand) {
+    //     if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
+    //         return ObjectResponseDto.builder()
+    //         .success(false)
+    //         .message("Please provide at least the ownerId and fname in the requestBody")
+    //         .object(addChildCommand)
+    //         .build();
+    //     }
+    //     Query query = new Query(Criteria.where("ownerId").is(addChildCommand.getOwnerId()).and("fname").is(addChildCommand.getFname()));
+    //     ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
+    //     if(findChild == null) {
+    //         ProfileModel profileModel = ProfileModel.builder()
+    //                                                 .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
+    //                                                 .ownerId(addChildCommand.getOwnerId())
+    //                                                 .fname(addChildCommand.getFname())
+    //                                                 .lname(addChildCommand.getLname())
+    //                                                 .birthYear(addChildCommand.getBirthYear())
+    //                                                 .info(addChildCommand.getInfo())
+    //                                                 .userType(new IndividualType(ProfileTypes.Child))
+    //                                                 .build();
+    //         return new ObjectResponseDto(true, "Success", profileRepository.addChild(profileModel));
+    //     } else {
+    //         return new ObjectResponseDto(false, "Child with same name cannot be added", null);
+    //     }
 
-    }
+    // }
 
     @Override
     public ParentProfileResponseDto getProfile(String ownerId){
@@ -191,7 +191,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public ObjectResponseDto saveTeamTeachFile(AddChildCommand addChildCommand) {
+    public ObjectResponseDto addChild(AddChildCommand addChildCommand) {
         if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
             return ObjectResponseDto.builder()
             .success(false)
@@ -232,6 +232,37 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                 .success(true)
                                 .message("Profile image added successfully")
                                 .object(profileModel)
+                                .build();
+    }
+
+    @Override
+    public ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id) {
+        Query query = new Query(Criteria.where("profileId").is(id));
+        ProfileModel pictureModel = mongoTemplate.findOne(query, ProfileModel.class);
+        if (pictureModel == null) {
+            return ObjectResponseDto.builder()
+                                    .success(false)
+                                    .message("No profile record found with given profileId")
+                                    .object(pictureModel)
+                                    .build();
+        }
+        String url = null;
+        try {
+            String fileExt = FilenameUtils.getExtension(file.getOriginalFilename()).replaceAll("\\s", "");
+            String fileName = "profile_"+id+"."+fileExt;
+            url = fileUploadService.saveTeamTeachFile("profileImages", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(file.getInputStream()));
+        } catch (IOException ioe) {
+            return ObjectResponseDto.builder()
+                                    .success(false)
+                                    .message(ioe.getMessage())
+                                    .build();
+        }
+        pictureModel.setProfileImage(url);
+        mongoTemplate.save(pictureModel);
+        return ObjectResponseDto.builder()
+                                .success(true)
+                                .message("Profile image added successfully")
+                                .object(pictureModel)
                                 .build();
     }
 }

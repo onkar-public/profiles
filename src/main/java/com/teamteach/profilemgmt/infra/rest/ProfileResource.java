@@ -34,12 +34,12 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
         return ResponseEntity.ok(profileMgmt.createBasicProfile(profileCreationCommand));
     }
 
-    @Override
-    @ApiOperation(value = "Adds new child of a Parent", authorizations = { @Authorization(value="jwtToken") })
-    public ResponseEntity<ObjectResponseDto> addChild(AddChildCommand addChildCommand) {
-        ObjectResponseDto childProfile = profileMgmt.addChild(addChildCommand);
-        return ResponseEntity.ok(childProfile);
-    }
+    // @Override
+    // @ApiOperation(value = "Adds new child of a Parent", authorizations = { @Authorization(value="jwtToken") })
+    // public ResponseEntity<ObjectResponseDto> addChild(AddChildCommand addChildCommand) {
+    //     ObjectResponseDto childProfile = profileMgmt.addChild(addChildCommand);
+    //     return ResponseEntity.ok(childProfile);
+    // }
 
     @Override
     public ResponseEntity<ObjectResponseDto> getProfile(String ownerId) {
@@ -57,13 +57,19 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     }
 
     @Override
-    public ResponseEntity<ObjectResponseDto> editProfileImage(  String ownerId, 
-                                                                MultipartFile profileImage,
-                                                                String fname,
-                                                                String lname,
-                                                                String birthYear,
-                                                                String info) {
+    @ApiOperation(value = "Adds new child of a Parent", authorizations = { @Authorization(value="jwtToken") })
+    public ResponseEntity<ObjectResponseDto> addChild( String ownerId, 
+                                                        MultipartFile profileImage,
+                                                        String fname,
+                                                        String lname,
+                                                        String birthYear,
+                                                        String info) {
         AddChildCommand addChildCommand = new AddChildCommand(ownerId,fname,lname,birthYear,info,profileImage);                                                           
-		return ResponseEntity.ok(profileMgmt.saveTeamTeachFile(addChildCommand));
+		return ResponseEntity.ok(profileMgmt.addChild(addChildCommand));
+    }
+
+    @Override
+    public ResponseEntity<ObjectResponseDto> editProfileImage(String profileId, MultipartFile file) {
+		return ResponseEntity.ok(profileMgmt.saveTeamTeachFile(file, profileId));
     }
 }

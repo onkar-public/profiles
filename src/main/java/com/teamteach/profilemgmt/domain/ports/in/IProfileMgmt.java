@@ -8,8 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface IProfileMgmt {
     ObjectResponseDto createBasicProfile(BasicProfileCreationCommand signUpCommand);
-    ObjectResponseDto addChild(AddChildCommand addChildCommand);
+    //ObjectResponseDto addChild(AddChildCommand addChildCommand);
     ParentProfileResponseDto getProfile(String ownerId);
     ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand);
-    ObjectResponseDto saveTeamTeachFile(AddChildCommand addChildCommand);
+    ObjectResponseDto addChild(AddChildCommand addChildCommand);
+    ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id);
 }
