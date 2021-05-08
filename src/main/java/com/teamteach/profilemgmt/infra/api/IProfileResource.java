@@ -23,8 +23,13 @@ public interface IProfileResource {
     @PutMapping("{profileId}")
     ResponseEntity<ObjectResponseDto> editProfile(@PathVariable String profileId, @RequestBody EditProfileCommand editProfileCommand);
 
-    @PostMapping("picture/{profileId}")
-    ResponseEntity<ObjectResponseDto> editProfileImage(@PathVariable String profileId, @RequestParam("file") MultipartFile file);
+    @PostMapping("child/{ownerId}")
+    ResponseEntity<ObjectResponseDto> editProfileImage( @PathVariable String ownerId, 
+                                                        @RequestParam("profileImage") MultipartFile file,
+                                                        @RequestParam("fname") String fname,
+                                                        @RequestParam("lname") String lname,
+                                                        @RequestParam("birthYear") String birthYear,
+                                                        @RequestParam("info") String info);
 
     @PostMapping("child")
     ResponseEntity<ObjectResponseDto> addChild(@RequestBody AddChildCommand addChildCommand);

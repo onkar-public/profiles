@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +36,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     @Autowired
     private FileUploadService fileUploadService;
 
-    @Value("${default_image}")
+    @Value("${defaultImage}")
 	private String default_image;
 
     @Autowired
@@ -190,33 +191,47 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id) {
-        Query query = new Query(Criteria.where("profileId").is(id));
-        ProfileModel pictureModel = mongoTemplate.findOne(query, ProfileModel.class);
-        if (pictureModel == null) {
+    public ObjectResponseDto saveTeamTeachFile(AddChildCommand addChildCommand) {
+        if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
             return ObjectResponseDto.builder()
-                                    .success(false)
-                                    .message("No profile record found with given profileId")
-                                    .object(pictureModel)
-                                    .build();
+            .success(false)
+            .message("Please provide at least the ownerId and fname in the requestBody")
+            .build();
         }
-        String url = null;
-        try {
-            String fileExt = FilenameUtils.getExtension(file.getOriginalFilename()).replaceAll("\\s", "");
-            String fileName = "profile_"+id+"."+fileExt;
-            url = fileUploadService.saveTeamTeachFile("profileImages", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(file.getInputStream()));
-        } catch (IOException ioe) {
-            return ObjectResponseDto.builder()
-                                    .success(false)
-                                    .message(ioe.getMessage())
-                                    .build();
-        }
-        pictureModel.setProfileImage(url);
-        mongoTemplate.save(pictureModel);
+        Query query = new Query(Criteria.where("ownerId").is(addChildCommand.getOwnerId()).and("fname").is(addChildCommand.getFname()));
+        ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
+        ProfileModel profileModel = null;
+        String profileId = sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME);
+        if(findChild == null) {
+            profileModel = ProfileModel.builder()
+                                        .profileId(profileId)
+                                        .ownerId(addChildCommand.getOwnerId())
+                                        .fname(addChildCommand.getFname())
+                                        .lname(addChildCommand.getLname())
+                                        .birthYear(addChildCommand.getBirthYear())
+                                        .info(addChildCommand.getInfo())
+                                        .userType(new IndividualType(ProfileTypes.Child))
+                                        .build();
+            String url = null;
+            try {
+                String fileExt = FilenameUtils.getExtension(addChildCommand.getProfileImage().getOriginalFilename()).replaceAll("\\s", "");
+                String fileName = "profile_"+profileId+"."+fileExt;
+                url = fileUploadService.saveTeamTeachFile("profileImages", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(addChildCommand.getProfileImage().getInputStream()));
+            } catch (IOException ioe) {
+                return ObjectResponseDto.builder()
+                                        .success(false)
+                                        .message(ioe.getMessage())
+                                        .build();
+            }
+            profileModel.setProfileImage(url);
+        } else {
+            return new ObjectResponseDto(false, "Child with same name cannot be added", null);
+        }   
+        mongoTemplate.save(profileModel);
         return ObjectResponseDto.builder()
                                 .success(true)
                                 .message("Profile image added successfully")
-                                .object(pictureModel)
+                                .object(profileModel)
                                 .build();
     }
 }

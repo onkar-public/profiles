@@ -11,5 +11,5 @@ public interface IProfileMgmt {
     ObjectResponseDto addChild(AddChildCommand addChildCommand);
     ParentProfileResponseDto getProfile(String ownerId);
     ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand);
-    ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id);
+    ObjectResponseDto saveTeamTeachFile(AddChildCommand addChildCommand);
 }
