@@ -213,17 +213,19 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                         .userType(new IndividualType(ProfileTypes.Child))
                                         .build();
             String url = null;
-            try {
-                String fileExt = FilenameUtils.getExtension(addChildCommand.getProfileImage().getOriginalFilename()).replaceAll("\\s", "");
-                String fileName = "profile_"+profileId+"."+fileExt;
-                url = fileUploadService.saveTeamTeachFile("profileImages", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(addChildCommand.getProfileImage().getInputStream()));
-            } catch (IOException ioe) {
-                return ObjectResponseDto.builder()
-                                        .success(false)
-                                        .message(ioe.getMessage())
-                                        .build();
-            }
-            profileModel.setProfileImage(url);
+            if(addChildCommand.getProfileImage() != null){
+                try {
+                    String fileExt = FilenameUtils.getExtension(addChildCommand.getProfileImage().getOriginalFilename()).replaceAll("\\s", "");
+                    String fileName = "profile_"+profileId+"."+fileExt;
+                    url = fileUploadService.saveTeamTeachFile("profileImages", fileName.replaceAll("\\s", ""), IOUtils.toByteArray(addChildCommand.getProfileImage().getInputStream()));
+                } catch (IOException ioe) {
+                    return ObjectResponseDto.builder()
+                                            .success(false)
+                                            .message(ioe.getMessage())
+                                            .build();
+                }
+                profileModel.setProfileImage(url);
+            }            
         } else {
             return new ObjectResponseDto(false, "Child with same name cannot be added", null);
         }   

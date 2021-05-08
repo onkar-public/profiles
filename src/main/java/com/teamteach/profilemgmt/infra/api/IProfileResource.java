@@ -25,11 +25,11 @@ public interface IProfileResource {
 
     @PostMapping("child/{ownerId}")
     ResponseEntity<ObjectResponseDto> addChild( @PathVariable String ownerId, 
-                                                @RequestParam("profileImage") MultipartFile file,
-                                                @RequestParam("fname") String fname,
-                                                @RequestParam("lname") String lname,
-                                                @RequestParam("birthYear") String birthYear,
-                                                @RequestParam("info") String info);
+                                                @RequestParam(value = "profileImage", required=false) MultipartFile file,
+                                                @RequestParam(value = "fname", required=true) String fname,
+                                                @RequestParam(value = "lname", required=false) String lname,
+                                                @RequestParam(value = "birthYear", required=false) String birthYear,
+                                                @RequestParam(value = "info", required=false) String info);
 
     // @PostMapping("child")
     // ResponseEntity<ObjectResponseDto> addChild(@RequestBody AddChildCommand addChildCommand);
