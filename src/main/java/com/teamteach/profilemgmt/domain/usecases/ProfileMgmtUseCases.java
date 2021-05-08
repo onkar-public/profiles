@@ -110,7 +110,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         List<ProfileModel> children = mongoTemplate.find(query, ProfileModel.class);
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
-            childIdList.add(new ChildProfileDto(child.getProfileId(), child.getFname(), child.getBirthYear(), child.getInfo()));
+            childIdList.add(new ChildProfileDto(child.getProfileId(), child.getFname(), child.getBirthYear(), child.getInfo(), child.getProfileImage()));
         }
 
         String[] timezones = TimeZone.getAvailableIDs();

@@ -10,4 +10,5 @@ public class ChildProfileDto {
     private String name;
     private String birthYear;
     private String info;
+    private String profileImage;
 }
