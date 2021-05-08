@@ -27,3 +27,4 @@ exchange:
 
 signup.routingkeys: event.email,event.profileupdate
 listen.queue.names: event.profileupdate
+default_image: https://teamteach.s3.ap-south-1.amazonaws.com/profileImage/defaultProfileImage.jpeg

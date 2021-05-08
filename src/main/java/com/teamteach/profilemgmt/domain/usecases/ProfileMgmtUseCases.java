@@ -35,6 +35,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     @Autowired
     private FileUploadService fileUploadService;
 
+    @Value("${default_image}")
+	private String default_image;
+
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
 
@@ -63,6 +66,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .lname(signUpCommand.getLname())
                                                 .userType(new IndividualType(ProfileTypes.Parent))
                                                 .relation("")
+                                                .profileImage(default_image)
                                                 .mobile(signUpCommand.getMobile())
                                                 .build();
         System.out.println(profileModel);                                      
