@@ -53,7 +53,11 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     Consumer<BasicProfileCreationCommand> queueConsumer = new Consumer<BasicProfileCreationCommand>() {
         @Override
         public void accept(BasicProfileCreationCommand userProfile) {
-            createBasicProfile(userProfile);
+            if(userProfile.getAction().equals("signup")){
+                createBasicProfile(userProfile);
+            } else if(userProfile.getAction().equals("delete")){
+                deleteProfile(userProfile);
+            }
         }
     };
 
@@ -72,6 +76,23 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .build();
         System.out.println(profileModel);                                      
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
+    }
+
+    public ObjectResponseDto deleteProfile(BasicProfileCreationCommand delProfile){
+        Query query = new Query(Criteria.where("ownerId").is(delProfile.getOwnerId()));
+        ProfileModel profileModel = mongoTemplate.findOne(query, ProfileModel.class);
+        if(profileModel != null){
+            mongoTemplate.remove(query, ProfileModel.class);
+            return ObjectResponseDto.builder()
+                                    .success(true)
+                                    .message("Profile deleted successfully")
+                                    .build();
+        } else{
+            return ObjectResponseDto.builder()
+                                    .success(false)
+                                    .message("Profile not found")
+                                    .build();
+        }
     }
 
     // @Override
