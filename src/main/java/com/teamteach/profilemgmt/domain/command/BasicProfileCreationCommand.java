@@ -17,6 +17,7 @@ public class BasicProfileCreationCommand extends ValidatingCommand<BasicProfileC
     private String profileType;
     private String relation;
     private String mobile;
+    private String action;
     @Override
     protected void validateSelf() {
         super.validateSelf();
