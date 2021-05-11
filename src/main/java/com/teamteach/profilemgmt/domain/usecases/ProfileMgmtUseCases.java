@@ -295,10 +295,10 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         TimezoneModel timezoneModel = mongoTemplate.findOne(query, TimezoneModel.class);
         if(timezoneModel == null){
             timezoneModel = TimezoneModel.builder()
-                                        .timezoneId(sequenceGeneratorService.generateSequence(TimezoneModel.SEQUENCE_NAME))
-                                        .country(addTimezoneCommand.getCountry())
-                                        .timezone(addTimezoneCommand.getTimezone())
-                                        .build();
+                                         .timezoneId(sequenceGeneratorService.generateSequence(TimezoneModel.SEQUENCE_NAME))
+                                         .country(addTimezoneCommand.getCountry())
+                                         .timezone(addTimezoneCommand.getTimezone())
+                                         .build();
             mongoTemplate.save(timezoneModel);                                           
             return ObjectResponseDto.builder()
                                     .success(true)                                  
