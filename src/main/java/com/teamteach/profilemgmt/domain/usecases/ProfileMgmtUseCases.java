@@ -135,7 +135,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             childIdList.add(new ChildProfileDto(child.getProfileId(), child.getFname(), child.getBirthYear(), child.getInfo(), child.getProfileImage()));
         }
 
-        String[] timezones = TimeZone.getAvailableIDs();
+        String[] timezones = getTimezones();
+        System.out.println(timezones);
 
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
                                                                          .fname(parentProfileModel.getFname())
@@ -308,7 +309,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         } else {
             return ObjectResponseDto.builder()
                                     .success(true)                                  
-                                    .message("This timezone already ezists")
+                                    .message("This timezone already exists")
                                     .object(timezoneModel)
                                     .build();
         }
@@ -330,5 +331,12 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .message("Timezone not found")
                                     .build();
         }
+    }
+
+    public String[] getTimezones(){
+        Query query = new Query();
+        List<TimezoneModel> allZones = mongoTemplate.find(query,TimezoneModel.class);
+        String[] timezones = allZones.stream().map(z -> z.getTimezone()).toArray(size -> new String[allZones.size()]);        
+        return timezones;
     }
 }
