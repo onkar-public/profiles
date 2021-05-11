@@ -1,6 +1,5 @@
 package com.teamteach.profilemgmt.domain.command;
 
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;

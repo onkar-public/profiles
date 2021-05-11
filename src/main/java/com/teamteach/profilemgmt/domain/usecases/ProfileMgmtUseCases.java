@@ -158,19 +158,19 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     public ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand) {
         if (editProfileCommand.getUserType() == null) {
             return ObjectResponseDto.builder()
-            .success(false)
-            .message("Please provide userType in the requestBody")
-            .object(editProfileCommand)
-            .build();
+                                    .success(false)
+                                    .message("Please provide userType in the requestBody")
+                                    .object(editProfileCommand)
+                                    .build();
         }
         Query query = new Query(Criteria.where("profileId").is(profileId).and("userType.type").is(editProfileCommand.getUserType()));
         ProfileModel editModel = mongoTemplate.findOne(query, ProfileModel.class);
         if (editModel == null) {
             return ObjectResponseDto.builder()
-            .success(false)
-            .message("No profile record found with given profileId and userType")
-            .object(editModel)
-            .build();
+                                    .success(false)
+                                    .message("No profile record found with given profileId and userType")
+                                    .object(editModel)
+                                    .build();
         }
         if (editProfileCommand.getFname() != null) {
             editModel.setFname(editProfileCommand.getFname());
@@ -287,5 +287,48 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                 .message("Profile image added successfully")
                                 .object(pictureModel)
                                 .build();
+    }
+
+    @Override
+    public ObjectResponseDto addTimezone(AddTimezoneCommand addTimezoneCommand){
+        Query query = new Query(Criteria.where("timezone").is(addTimezoneCommand.getTimezone()));
+        TimezoneModel timezoneModel = mongoTemplate.findOne(query, TimezoneModel.class);
+        if(timezoneModel == null){
+            timezoneModel = TimezoneModel.builder()
+                                        .timezoneId(sequenceGeneratorService.generateSequence(TimezoneModel.SEQUENCE_NAME))
+                                        .country(addTimezoneCommand.getCountry())
+                                        .timezone(addTimezoneCommand.getTimezone())
+                                        .build();
+            mongoTemplate.save(timezoneModel);                                           
+            return ObjectResponseDto.builder()
+                                    .success(true)                                  
+                                    .message("Timezones added successfully")
+                                    .object(timezoneModel)
+                                    .build();
+        } else {
+            return ObjectResponseDto.builder()
+                                    .success(true)                                  
+                                    .message("This timezone already ezists")
+                                    .object(timezoneModel)
+                                    .build();
+        }
+    }
+
+    @Override
+    public ObjectResponseDto deleteTimezone(String timezoneId){
+        Query query = new Query(Criteria.where("timezoneId").is(timezoneId));
+        TimezoneModel timezoneModel = mongoTemplate.findOne(query, TimezoneModel.class);
+        if(timezoneModel != null){
+            mongoTemplate.remove(query, TimezoneModel.class);
+            return ObjectResponseDto.builder()
+                                    .success(true)                                  
+                                    .message("Timezone deleted successfully")
+                                    .build();
+        } else {
+            return ObjectResponseDto.builder()
+                                    .success(false)                                  
+                                    .message("Timezone not found")
+                                    .build();
+        }
     }
 }
