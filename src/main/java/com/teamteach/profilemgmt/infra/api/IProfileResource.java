@@ -39,4 +39,10 @@ public interface IProfileResource {
 
     @GetMapping("owner/{ownerId}")
     ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String ownerId);
+
+    @PostMapping("timezones")
+    ResponseEntity<ObjectResponseDto> addTimezone( @RequestBody AddTimezoneCommand addTimezoneCommand);
+
+    @DeleteMapping("timezones/{timezoneId}")
+    ResponseEntity<ObjectResponseDto> deleteTimezone(@PathVariable String timezoneId);
 }

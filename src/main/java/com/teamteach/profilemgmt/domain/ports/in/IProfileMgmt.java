@@ -13,4 +13,6 @@ public interface IProfileMgmt {
     ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand);
     ObjectResponseDto addChild(AddChildCommand addChildCommand);
     ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id);
+    ObjectResponseDto addTimezone(AddTimezoneCommand addTimezoneCommand);
+    ObjectResponseDto deleteTimezone(String timezoneId);
 }

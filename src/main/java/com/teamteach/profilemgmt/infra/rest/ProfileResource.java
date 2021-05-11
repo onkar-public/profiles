@@ -1,14 +1,11 @@
 package com.teamteach.profilemgmt.infra.rest;
 
-import com.teamteach.profilemgmt.domain.command.AddChildCommand;
+import com.teamteach.profilemgmt.domain.command.*;
 import com.teamteach.profilemgmt.domain.ports.in.IProfileMgmt;
-import com.teamteach.profilemgmt.domain.responses.ObjectResponseDto;
-import com.teamteach.profilemgmt.domain.responses.ParentProfileResponseDto;
+import com.teamteach.profilemgmt.domain.responses.*;
 import com.teamteach.profilemgmt.infra.api.IProfileResource;
 import com.teamteach.profilemgmt.shared.AbstractAppController;
-import com.teamteach.profilemgmt.domain.command.BasicProfileCreationCommand;
-import com.teamteach.profilemgmt.domain.command.EditProfileCommand;
-import com.teamteach.profilemgmt.domain.models.ProfileModel;
+import com.teamteach.profilemgmt.domain.models.*;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -72,4 +69,15 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     public ResponseEntity<ObjectResponseDto> editProfileImage(String profileId, MultipartFile file) {
 		return ResponseEntity.ok(profileMgmt.saveTeamTeachFile(file, profileId));
     }
+
+    @Override
+    public ResponseEntity<ObjectResponseDto> addTimezone(AddTimezoneCommand addTimezoneCommand){
+        return ResponseEntity.ok(profileMgmt.addTimezone(addTimezoneCommand));
+    }
+
+    @Override
+    public ResponseEntity<ObjectResponseDto> deleteTimezone(String timezoneId){
+        return ResponseEntity.ok(profileMgmt.deleteTimezone(timezoneId));
+    }
 }
+
