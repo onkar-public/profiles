@@ -309,7 +309,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         } else {
             return ObjectResponseDto.builder()
                                     .success(true)                                  
-                                    .message("This timezone already ezists")
+                                    .message("This timezone already exists")
                                     .object(timezoneModel)
                                     .build();
         }
@@ -335,13 +335,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     public String[] getTimezones(){
         Query query = new Query();
-        int i=0;
         List<TimezoneModel> allZones = mongoTemplate.find(query,TimezoneModel.class);
-        String[] timezones = new String[allZones.size()];
-        for(TimezoneModel zone: allZones){
-            timezones[i] = zone.getTimezone();
-            i++;
-        }
+        String[] timezones = allZones.stream().map(z -> z.getTimezone()).toArray(size -> new String[allZones.size()]);        
         return timezones;
     }
 }
