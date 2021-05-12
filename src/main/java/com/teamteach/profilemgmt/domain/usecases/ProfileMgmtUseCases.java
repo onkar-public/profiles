@@ -95,34 +95,6 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
     }
 
-    // @Override
-    // public ObjectResponseDto addChild(AddChildCommand addChildCommand) {
-    //     if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
-    //         return ObjectResponseDto.builder()
-    //         .success(false)
-    //         .message("Please provide at least the ownerId and fname in the requestBody")
-    //         .object(addChildCommand)
-    //         .build();
-    //     }
-    //     Query query = new Query(Criteria.where("ownerId").is(addChildCommand.getOwnerId()).and("fname").is(addChildCommand.getFname()));
-    //     ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
-    //     if(findChild == null) {
-    //         ProfileModel profileModel = ProfileModel.builder()
-    //                                                 .profileId(sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME))
-    //                                                 .ownerId(addChildCommand.getOwnerId())
-    //                                                 .fname(addChildCommand.getFname())
-    //                                                 .lname(addChildCommand.getLname())
-    //                                                 .birthYear(addChildCommand.getBirthYear())
-    //                                                 .info(addChildCommand.getInfo())
-    //                                                 .userType(new IndividualType(ProfileTypes.Child))
-    //                                                 .build();
-    //         return new ObjectResponseDto(true, "Success", profileRepository.addChild(profileModel));
-    //     } else {
-    //         return new ObjectResponseDto(false, "Child with same name cannot be added", null);
-    //     }
-
-    // }
-
     @Override
     public ParentProfileResponseDto getProfile(String ownerId){
         Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
@@ -174,6 +146,19 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .build();
         }
         if (editProfileCommand.getFname() != null) {
+            if (editProfileCommand.getUserType().equals("Child")) {
+                query = new Query(Criteria.where("ownerId").is(editModel.getOwnerId())
+                                                                .and("fname").is(editProfileCommand.getFname())
+                                                                .and("profileId").ne(profileId));
+                ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
+                if(findChild != null) {
+                    return ObjectResponseDto.builder()
+                    .success(false)
+                    .message("A parent can not have 2 children with same first name")
+                    .object(editModel)
+                    .build();
+                }                    
+            }
             editModel.setFname(editProfileCommand.getFname());
         }
         if (editProfileCommand.getLname() != null) {
