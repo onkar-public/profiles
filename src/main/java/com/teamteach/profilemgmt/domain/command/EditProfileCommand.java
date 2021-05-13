@@ -14,6 +14,7 @@ public class EditProfileCommand extends ValidatingCommand<BasicProfileCreationCo
     private String relation;
     private String email;
     private String countryCode;
+    private String callingCode;
     private String timezone;
     private String birthYear;
     private String info;

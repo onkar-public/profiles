@@ -116,6 +116,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .email(parentProfileModel.getEmail())
                                                                          .mobile(parentProfileModel.getMobile())
                                                                          .countryCode(parentProfileModel.getCountryCode())
+                                                                         .callingCode(parentProfileModel.getCallingCode())
                                                                          .timezone(parentProfileModel.getTimezone())
                                                                          .relation(parentProfileModel.getRelation())
                                                                          .children(childIdList)
@@ -173,6 +174,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             }
             if (editProfileCommand.getCountryCode() != null) {
                 editModel.setCountryCode(editProfileCommand.getCountryCode());
+            }
+            if (editProfileCommand.getCallingCode() != null) {
+                editModel.setCallingCode(editProfileCommand.getCallingCode());
             }
             if (editProfileCommand.getTimezone() != null) {
                 editModel.setTimezone(editProfileCommand.getTimezone());
