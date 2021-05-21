@@ -28,7 +28,7 @@ public interface IProfileResource {
                                                 @RequestParam(value = "profileImage", required=false) MultipartFile file,
                                                 @RequestParam(value = "fname", required=true) String fname,
                                                 @RequestParam(value = "lname", required=false) String lname,
-                                                @RequestParam(value = "birthYear", required=false) String birthYear,
+                                                @RequestParam(value = "birthYear", required=true) String birthYear,
                                                 @RequestParam(value = "info", required=false) String info);
 
     // @PostMapping("child")

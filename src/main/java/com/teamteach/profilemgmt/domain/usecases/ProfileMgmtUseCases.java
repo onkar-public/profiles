@@ -236,7 +236,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                             .build();
                 }
                 profileModel.setProfileImage(url);
-            }            
+            } else{
+                profileModel.setProfileImage(default_image);
+            }         
         } else {
             return new ObjectResponseDto(false, "Child with same name cannot be added", null);
         }   
