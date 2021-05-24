@@ -105,8 +105,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
             String name = child.getFname();
-            if (child.getLname() != null) name += " " + child.getLname();
-            childIdList.add(new ChildProfileDto(child.getProfileId(), child.getFname(), child.getBirthYear(), child.getInfo(), child.getProfileImage()));
+            if (child.getLname() != null && !child.getLname().equals("undefined")) name += " " + child.getLname();
+            childIdList.add(new ChildProfileDto(child.getProfileId(), name, child.getBirthYear(), child.getInfo(), child.getProfileImage()));
         }
 
         String[] timezones = getTimezones();
