@@ -48,6 +48,12 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     }
 
     @Override
+    public ResponseEntity<ObjectResponseDto> postProfile(String profileId, EditProfileCommand editProfileCommand) {
+        System.out.println("Editing profile with id: " + profileId);
+		return ResponseEntity.ok(profileMgmt.editProfile(profileId,editProfileCommand));
+    }
+
+    @Override
     @ApiOperation(value = "Adds new child of a Parent", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ObjectResponseDto> addChild( String ownerId, 
                                                         MultipartFile profileImage,
