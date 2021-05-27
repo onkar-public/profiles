@@ -31,13 +31,6 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
         return ResponseEntity.ok(profileMgmt.createBasicProfile(profileCreationCommand));
     }
 
-    // @Override
-    // @ApiOperation(value = "Adds new child of a Parent", authorizations = { @Authorization(value="jwtToken") })
-    // public ResponseEntity<ObjectResponseDto> addChild(AddChildCommand addChildCommand) {
-    //     ObjectResponseDto childProfile = profileMgmt.addChild(addChildCommand);
-    //     return ResponseEntity.ok(childProfile);
-    // }
-
     @Override
     public ResponseEntity<ObjectResponseDto> getProfile(String ownerId) {
         ParentProfileResponseDto parentProfile = profileMgmt.getProfile(ownerId);
@@ -50,6 +43,7 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
 
     @Override
     public ResponseEntity<ObjectResponseDto> editProfile(String profileId, EditProfileCommand editProfileCommand) {
+        System.out.println("Editing profile with id: " + profileId);
 		return ResponseEntity.ok(profileMgmt.editProfile(profileId,editProfileCommand));
     }
 

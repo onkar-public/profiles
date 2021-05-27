@@ -74,7 +74,6 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .profileImage(default_image)
                                                 .mobile(signUpCommand.getMobile())
                                                 .build();
-        System.out.println(profileModel);                                      
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
 
@@ -110,7 +109,6 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
 
         String[] timezones = getTimezones();
-        System.out.println(timezones);
 
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
                                                                          .fname(parentProfileModel.getFname())
