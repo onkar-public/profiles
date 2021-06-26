@@ -33,7 +33,7 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
 
     @Override
     public ResponseEntity<ObjectResponseDto> getProfile(String ownerId) {
-        ParentProfileResponseDto parentProfile = profileMgmt.getProfile(ownerId, false);
+        ParentProfileResponseDto parentProfile = profileMgmt.getProfile(ownerId);
         if (parentProfile == null) {
             return ResponseEntity.ok(new ObjectResponseDto(false, "Parent profile not found", null));
         } else {
@@ -42,12 +42,12 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     }
 
     @Override
-    public ResponseEntity<ObjectResponseDto> getPVProfile(String ownerId) {
-        ParentProfileResponseDto parentProfile = profileMgmt.getProfile(ownerId, true);
-        if (parentProfile == null) {
-            return ResponseEntity.ok(new ObjectResponseDto(false, "Parent profile not found", null));
+    public ResponseEntity<ObjectResponseDto> getWTBDetails(String ownerId) {
+        WTBDetailsResponse wtbDetailsResponse = profileMgmt.getWTBDetails(ownerId);
+        if (wtbDetailsResponse == null) {
+            return ResponseEntity.ok(new ObjectResponseDto(false, "WTB profile not found", null));
         } else {
-            return ResponseEntity.ok(new ObjectResponseDto(true, "Parent profile retrieved", parentProfile));
+            return ResponseEntity.ok(new ObjectResponseDto(true, "WTB profile retrieved", wtbDetailsResponse));
         }
     }
 

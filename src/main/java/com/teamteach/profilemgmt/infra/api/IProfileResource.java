@@ -41,8 +41,8 @@ public interface IProfileResource {
     @GetMapping("owner/{ownerId}")
     ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String ownerId);
 
-    @GetMapping("owner/{ownerId}/pv")
-    ResponseEntity<ObjectResponseDto> getPVProfile(@PathVariable String ownerId);
+    @GetMapping("wtb/{ownerId}")
+    ResponseEntity<ObjectResponseDto> getWTBDetails(@PathVariable String ownerId);
 
     @ApiIgnore
     @PostMapping("timezones")

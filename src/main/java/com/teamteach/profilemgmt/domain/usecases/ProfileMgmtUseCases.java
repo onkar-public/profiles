@@ -99,7 +99,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public ParentProfileResponseDto getProfile(String ownerId, boolean isParentVillage){
+    public ParentProfileResponseDto getProfile(String ownerId){
         Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
         ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
         if (parentProfileModel == null) return null;
@@ -129,10 +129,17 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .profileImage(parentProfileModel.getProfileImage())
                                                                          .timezones(timezones)
                                                                          .build();
-        if (isParentVillage) {
-            parentProfile.setWtbToken(wtbTokenService.getWTBToken(parentProfile.getEmail()));
-        }
         return parentProfile;                                                                
+    }
+
+    @Override
+    public WTBDetailsResponse getWTBDetails(String ownerId) {
+        Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
+        ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
+        if (parentProfileModel == null) return null;
+        return WTBDetailsResponse.builder()
+                                .wtbToken(wtbTokenService.getWTBToken(parentProfileModel.getEmail()))
+                                .build();        
     }
 
     @Override
