@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 
 public class WTBTokenService {
     RestTemplate restTemplate = new RestTemplate();
-    private final String wtpAPIPortal = "https://forum.parentvillage.ml/index.php";
+    private final String wtpAPIPortal = "https://forum.parentvillage.ml/get_token.php";
     private final String API_KEY = "MR2tNUFI2WZ9LpGbF34k2EsyXrnNTWNaBYPL5zK9";
 
     public String getWTBToken(String email) {
