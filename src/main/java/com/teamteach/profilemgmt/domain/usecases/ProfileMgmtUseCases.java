@@ -137,6 +137,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
         ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
         if (parentProfileModel == null) return null;
+        System.out.println(parentProfileModel);
         return WTBDetailsResponse.builder()
                                 .wtbToken(wtbTokenService.getWTBToken(parentProfileModel.getEmail()))
                                 .build();        
