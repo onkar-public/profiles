@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
+import java.nio.channels.WritePendingException;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -35,6 +36,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Autowired
     private FileUploadService fileUploadService;
+
+    @Autowired
+    private WTBTokenService wtbTokenService;
 
     @Value("${defaultImage}")
 	private String default_image;
@@ -95,7 +99,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public ParentProfileResponseDto getProfile(String ownerId){
+    public ParentProfileResponseDto getProfile(String ownerId, boolean isParentVillage){
         Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
         ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
         if (parentProfileModel == null) return null;
@@ -107,7 +111,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             if (child.getLname() != null && !child.getLname().equals("undefined")) name += " " + child.getLname();
             childIdList.add(new ChildProfileDto(child.getProfileId(), name, child.getBirthYear(), child.getInfo(), child.getProfileImage()));
         }
-
+    
         String[] timezones = getTimezones();
 
         ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
@@ -125,6 +129,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                                          .profileImage(parentProfileModel.getProfileImage())
                                                                          .timezones(timezones)
                                                                          .build();
+        if (isParentVillage) {
+            parentProfile.setWtbToken(wtbTokenService.getWTBToken(parentProfile.getEmail()));
+        }
         return parentProfile;                                                                
     }
 

@@ -23,5 +23,5 @@ public class ParentProfileResponseDto {
     private String timezone;
     private String profileImage;
     private String[] timezones;
-   
+    private String wtbToken;
 }

@@ -41,6 +41,9 @@ public interface IProfileResource {
     @GetMapping("owner/{ownerId}")
     ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String ownerId);
 
+    @GetMapping("owner/{ownerId}/pv")
+    ResponseEntity<ObjectResponseDto> getPVProfile(@PathVariable String ownerId);
+
     @ApiIgnore
     @PostMapping("timezones")
     ResponseEntity<ObjectResponseDto> addTimezone( @RequestBody AddTimezoneCommand addTimezoneCommand);
