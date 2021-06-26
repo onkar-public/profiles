@@ -133,13 +133,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public WTBDetailsResponse getWTBDetails(String ownerId) {
-        Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
-        ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
-        if (parentProfileModel == null) return null;
-        System.out.println(parentProfileModel);
+    public WTBDetailsResponse getWTBDetails(String email) {
         return WTBDetailsResponse.builder()
-                                .wtbToken(wtbTokenService.getWTBToken(parentProfileModel.getEmail()))
+                                .wtbToken(wtbTokenService.getWTBToken(email))
                                 .build();        
     }
 
