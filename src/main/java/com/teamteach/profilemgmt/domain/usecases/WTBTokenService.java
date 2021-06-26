@@ -17,6 +17,7 @@ public class WTBTokenService {
         String url = wtpAPIPortal + "?email" + email;
         HttpEntity <String> entity = new HttpEntity <> (null, null);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
+        System.out.println(response);
         return response.getBody().toString();
     }
 }
