@@ -5,6 +5,7 @@ import com.teamteach.profilemgmt.domain.ports.in.IProfileMgmt;
 import com.teamteach.profilemgmt.domain.models.*;
 import com.teamteach.profilemgmt.domain.models.vo.IndividualType;
 import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
+import com.teamteach.profilemgmt.domain.ports.out.ITimezoneRepository;
 import com.teamteach.commons.connectors.rabbit.core.IMessagingPort;
 
 import org.apache.commons.io.FilenameUtils;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.teamteach.profilemgmt.domain.responses.*;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,13 +25,13 @@ import org.springframework.beans.factory.annotation.Value;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
-import java.nio.channels.WritePendingException;
 import java.util.*;
 
 @RequiredArgsConstructor
 public class ProfileMgmtUseCases implements IProfileMgmt {
 
     final IProfileRepository profileRepository;
+    final ITimezoneRepository timezoneRepository;
     final IMessagingPort messagingPort;
 
     @Autowired
@@ -82,10 +82,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     public ObjectResponseDto deleteProfile(BasicProfileCreationCommand delProfile){
-        Query query = new Query(Criteria.where("ownerId").is(delProfile.getOwnerId()));
-        ProfileModel profileModel = mongoTemplate.findOne(query, ProfileModel.class);
-        if(profileModel != null){
-            mongoTemplate.remove(query, ProfileModel.class);
+        boolean isRemoved = profileRepository.removeProfile(delProfile.getOwnerId());
+        if(isRemoved == true){
             return ObjectResponseDto.builder()
                                     .success(true)
                                     .message("Profile deleted successfully")
@@ -100,11 +98,16 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ParentProfileResponseDto getProfile(String ownerId){
-        Query query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Parent"));
-        ProfileModel parentProfileModel = mongoTemplate.findOne(query, ProfileModel.class);
+        HashMap<String,String> searchCriteria = new HashMap<>();
+        searchCriteria.put("ownerId",ownerId);
+        searchCriteria.put("userType.type","Parent");
+        List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
+        ProfileModel parentProfileModel = profiles.isEmpty() ? null : profiles.get(0);
         if (parentProfileModel == null) return null;
-        query = new Query(Criteria.where("ownerId").is(ownerId).and("userType.type").is("Child"));
-        List<ProfileModel> children = mongoTemplate.find(query, ProfileModel.class);
+        searchCriteria = new HashMap<>();
+        searchCriteria.put("ownerId",ownerId);
+        searchCriteria.put("userType.type","Child");
+        List<ProfileModel> children = profileRepository.getProfile(searchCriteria, null);
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
             String name = child.getFname();
@@ -148,8 +151,11 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .object(editProfileCommand)
                                     .build();
         }
-        Query query = new Query(Criteria.where("profileId").is(profileId).and("userType.type").is(editProfileCommand.getUserType()));
-        ProfileModel editModel = mongoTemplate.findOne(query, ProfileModel.class);
+        HashMap<String,String> searchCriteria = new HashMap<>();
+        searchCriteria.put("profileId",profileId);
+        searchCriteria.put("userType.type",editProfileCommand.getUserType());
+        List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
+        ProfileModel editModel = profiles.isEmpty() ? null : profiles.get(0);
         if (editModel == null) {
             return ObjectResponseDto.builder()
                                     .success(false)
@@ -159,10 +165,13 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
         if (editProfileCommand.getFname() != null) {
             if (editProfileCommand.getUserType().equals("Child")) {
-                query = new Query(Criteria.where("ownerId").is(editModel.getOwnerId())
-                                                                .and("fname").is(editProfileCommand.getFname())
-                                                                .and("profileId").ne(profileId));
-                ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
+                searchCriteria = new HashMap<>();
+                searchCriteria.put("ownerId",editModel.getOwnerId());
+                searchCriteria.put("fname",editProfileCommand.getFname());
+                HashMap<String,String> excludeCriteria = new HashMap<>();
+                excludeCriteria.put("profileId",profileId);
+                profiles = profileRepository.getProfile(searchCriteria, excludeCriteria);
+                ProfileModel findChild = profiles.isEmpty() ? null : profiles.get(0);
                 if(findChild != null) {
                     return ObjectResponseDto.builder()
                     .success(false)
@@ -204,7 +213,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             }
         }
         
-        mongoTemplate.save(editModel);
+        profileRepository.saveProfile(editModel);
         return ObjectResponseDto.builder()
                                 .success(true)
                                 .message("Profile edited successfully")
@@ -220,8 +229,11 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             .message("Please provide at least the ownerId and fname in the requestBody")
             .build();
         }
-        Query query = new Query(Criteria.where("ownerId").is(addChildCommand.getOwnerId()).and("fname").is(addChildCommand.getFname()));
-        ProfileModel findChild = mongoTemplate.findOne(query, ProfileModel.class);
+        HashMap<String,String> searchCriteria = new HashMap<>();
+        searchCriteria.put("ownerId",addChildCommand.getOwnerId());
+        searchCriteria.put("fname",addChildCommand.getFname());
+        List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
+        ProfileModel findChild = profiles.isEmpty() ? null : profiles.get(0);
         ProfileModel profileModel = null;
         String profileId = sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME);
         if(findChild == null) {
@@ -253,7 +265,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         } else {
             return new ObjectResponseDto(false, "Child with same name cannot be added", null);
         }   
-        mongoTemplate.save(profileModel);
+        profileRepository.saveProfile(profileModel);
         return ObjectResponseDto.builder()
                                 .success(true)
                                 .message("Profile image added successfully")
@@ -263,8 +275,10 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id) {
-        Query query = new Query(Criteria.where("profileId").is(id));
-        ProfileModel pictureModel = mongoTemplate.findOne(query, ProfileModel.class);
+        HashMap<String,String> searchCriteria = new HashMap<>();
+        searchCriteria.put("profileId",id);
+        List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
+        ProfileModel pictureModel = profiles.isEmpty() ? null : profiles.get(0);
         if (pictureModel == null) {
             return ObjectResponseDto.builder()
                                     .success(false)
@@ -284,7 +298,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .build();
         }
         pictureModel.setProfileImage(url);
-        mongoTemplate.save(pictureModel);
+        profileRepository.saveProfile(pictureModel);
         return ObjectResponseDto.builder()
                                 .success(true)
                                 .message("Profile image added successfully")
@@ -294,15 +308,17 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ObjectResponseDto addTimezone(AddTimezoneCommand addTimezoneCommand){
-        Query query = new Query(Criteria.where("timezone").is(addTimezoneCommand.getTimezone()));
-        TimezoneModel timezoneModel = mongoTemplate.findOne(query, TimezoneModel.class);
+        HashMap<String,String> searchCriteria = new HashMap<>();
+        searchCriteria.put("timezone",addTimezoneCommand.getTimezone());
+        List<TimezoneModel> timezones = timezoneRepository.getTimezone(searchCriteria, null);
+        TimezoneModel timezoneModel = timezones.isEmpty() ? null : timezones.get(0);
         if(timezoneModel == null){
             timezoneModel = TimezoneModel.builder()
                                          .timezoneId(sequenceGeneratorService.generateSequence(TimezoneModel.SEQUENCE_NAME))
                                          .country(addTimezoneCommand.getCountry())
                                          .timezone(addTimezoneCommand.getTimezone())
                                          .build();
-            mongoTemplate.save(timezoneModel);                                           
+            timezoneRepository.saveTimezone(timezoneModel);                                           
             return ObjectResponseDto.builder()
                                     .success(true)                                  
                                     .message("Timezones added successfully")
@@ -319,10 +335,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ObjectResponseDto deleteTimezone(String timezoneId){
-        Query query = new Query(Criteria.where("timezoneId").is(timezoneId));
-        TimezoneModel timezoneModel = mongoTemplate.findOne(query, TimezoneModel.class);
-        if(timezoneModel != null){
-            mongoTemplate.remove(query, TimezoneModel.class);
+        boolean isRemoved = timezoneRepository.removeTimezone(timezoneId);
+        if(isRemoved == true){
             return ObjectResponseDto.builder()
                                     .success(true)                                  
                                     .message("Timezone deleted successfully")
@@ -337,7 +351,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     public String[] getTimezones(){
         Query query = new Query();
-        List<TimezoneModel> allZones = mongoTemplate.find(query,TimezoneModel.class);
+        List<TimezoneModel> allZones = timezoneRepository.getTimezone(null, null);
         String[] timezones = allZones.stream().map(z -> z.getTimezone()).toArray(size -> new String[allZones.size()]);        
         return timezones;
     }
