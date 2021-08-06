@@ -1,13 +1,14 @@
 package com.teamteach.profilemgmt.infra.persistence.dal;
 
 import com.teamteach.profilemgmt.domain.models.ProfileModel;
+import com.teamteach.profilemgmt.domain.models.SearchKey;
 import com.teamteach.profilemgmt.domain.ports.out.IProfileRepository;
+
+import com.teamteach.commons.utils.AnonymizeService;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.teamteach.profilemgmt.domain.command.*;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -37,13 +38,15 @@ public class ProfileDAL  implements IProfileRepository {
 
     @Override
     public ProfileModel saveProfile(ProfileModel profileModel) {
+        // profileModel.setFname(AnonymizeService.anonymizeData(profileModel.getFname()));
+        // profileModel.setLname(AnonymizeService.anonymizeData(profileModel.getLname()));
         ProfileModel newModel = mongoTemplate.save(profileModel);
         return newModel;
     }
 
     @Override
     public ProfileModel addChild(ProfileModel profileModel){
-        ProfileModel newChildModel = mongoTemplate.save(profileModel);
+        ProfileModel newChildModel = saveProfile(profileModel);
         return newChildModel;
     }
 
@@ -53,12 +56,17 @@ public class ProfileDAL  implements IProfileRepository {
         List<ProfileModel> profiles = mongoTemplate.findAllAndRemove(query, ProfileModel.class);
         return profiles.isEmpty() ? false : true;
     }
+
     @Override
-    public List<ProfileModel> getProfile(HashMap<String,String> searchCriteria, HashMap<String,String> excludeCriteria){
+    public List<ProfileModel> getProfile(HashMap<SearchKey,String> searchCriteria, HashMap<String,String> excludeCriteria){
         Query query = new Query();
         if(searchCriteria != null){
-            for(Map.Entry<String,String> criteria : searchCriteria.entrySet()){
-                query.addCriteria(Criteria.where(criteria.getKey()).is(criteria.getValue()));
+            for(Map.Entry<SearchKey,String> criteria : searchCriteria.entrySet()){
+                if(criteria.getKey().isAnonymizable()){
+                    query.addCriteria(Criteria.where(criteria.getKey().getField()).is(AnonymizeService.anonymizeData(criteria.getValue())));
+                } else{
+                    query.addCriteria(Criteria.where(criteria.getKey().getField()).is(criteria.getValue()));
+                }
             }
         }
         if(excludeCriteria != null){
@@ -67,6 +75,10 @@ public class ProfileDAL  implements IProfileRepository {
             }
         }
         List<ProfileModel> profiles = mongoTemplate.find(query,ProfileModel.class);
+        // for(ProfileModel profileModel : profiles){
+        //     profileModel.setFname(AnonymizeService.deAnonymizeData(profileModel.getFname()));
+        //     profileModel.setLname(AnonymizeService.deAnonymizeData(profileModel.getLname()));
+        // }
         return profiles;
     } 
 }

@@ -98,15 +98,15 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ParentProfileResponseDto getProfile(String ownerId){
-        HashMap<String,String> searchCriteria = new HashMap<>();
-        searchCriteria.put("ownerId",ownerId);
-        searchCriteria.put("userType.type","Parent");
+        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+        searchCriteria.put(new SearchKey("ownerId",false),ownerId);
+        searchCriteria.put(new SearchKey("userType.type",false),"Parent");
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel parentProfileModel = profiles.isEmpty() ? null : profiles.get(0);
         if (parentProfileModel == null) return null;
         searchCriteria = new HashMap<>();
-        searchCriteria.put("ownerId",ownerId);
-        searchCriteria.put("userType.type","Child");
+        searchCriteria.put(new SearchKey("ownerId",false),ownerId);
+        searchCriteria.put(new SearchKey("userType.type",false),"Child");
         List<ProfileModel> children = profileRepository.getProfile(searchCriteria, null);
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
@@ -151,9 +151,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .object(editProfileCommand)
                                     .build();
         }
-        HashMap<String,String> searchCriteria = new HashMap<>();
-        searchCriteria.put("profileId",profileId);
-        searchCriteria.put("userType.type",editProfileCommand.getUserType());
+        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+        searchCriteria.put(new SearchKey("profileId",false),profileId);
+        searchCriteria.put(new SearchKey("userType.type",false),editProfileCommand.getUserType());
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel editModel = profiles.isEmpty() ? null : profiles.get(0);
         if (editModel == null) {
@@ -166,8 +166,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         if (editProfileCommand.getFname() != null) {
             if (editProfileCommand.getUserType().equals("Child")) {
                 searchCriteria = new HashMap<>();
-                searchCriteria.put("ownerId",editModel.getOwnerId());
-                searchCriteria.put("fname",editProfileCommand.getFname());
+                searchCriteria.put(new SearchKey("ownerId",false),editModel.getOwnerId());
+                searchCriteria.put(new SearchKey("fname",false),editProfileCommand.getFname());
                 HashMap<String,String> excludeCriteria = new HashMap<>();
                 excludeCriteria.put("profileId",profileId);
                 profiles = profileRepository.getProfile(searchCriteria, excludeCriteria);
@@ -229,9 +229,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             .message("Please provide at least the ownerId and fname in the requestBody")
             .build();
         }
-        HashMap<String,String> searchCriteria = new HashMap<>();
-        searchCriteria.put("ownerId",addChildCommand.getOwnerId());
-        searchCriteria.put("fname",addChildCommand.getFname());
+        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+        searchCriteria.put(new SearchKey("ownerId",false),addChildCommand.getOwnerId());
+        searchCriteria.put(new SearchKey("fname",false),addChildCommand.getFname());
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel findChild = profiles.isEmpty() ? null : profiles.get(0);
         ProfileModel profileModel = null;
@@ -275,8 +275,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id) {
-        HashMap<String,String> searchCriteria = new HashMap<>();
-        searchCriteria.put("profileId",id);
+        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+        searchCriteria.put(new SearchKey("profileId",false),id);
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel pictureModel = profiles.isEmpty() ? null : profiles.get(0);
         if (pictureModel == null) {
