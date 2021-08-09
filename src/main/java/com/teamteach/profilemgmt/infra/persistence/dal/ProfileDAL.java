@@ -38,8 +38,11 @@ public class ProfileDAL  implements IProfileRepository {
 
     @Override
     public ProfileModel saveProfile(ProfileModel profileModel) {
-        // profileModel.setFname(AnonymizeService.anonymizeData(profileModel.getFname()));
-        // profileModel.setLname(AnonymizeService.anonymizeData(profileModel.getLname()));
+        profileModel.setFname(AnonymizeService.anonymizeData(profileModel.getFname()));
+        profileModel.setLname(AnonymizeService.anonymizeData(profileModel.getLname()));
+        profileModel.setEmail(AnonymizeService.anonymizeData(profileModel.getEmail()));
+        profileModel.setMobile(AnonymizeService.anonymizeData(profileModel.getMobile()));
+        profileModel.setOwnerId(AnonymizeService.anonymizeData(profileModel.getOwnerId()));
         ProfileModel newModel = mongoTemplate.save(profileModel);
         return newModel;
     }
@@ -75,10 +78,13 @@ public class ProfileDAL  implements IProfileRepository {
             }
         }
         List<ProfileModel> profiles = mongoTemplate.find(query,ProfileModel.class);
-        // for(ProfileModel profileModel : profiles){
-        //     profileModel.setFname(AnonymizeService.deAnonymizeData(profileModel.getFname()));
-        //     profileModel.setLname(AnonymizeService.deAnonymizeData(profileModel.getLname()));
-        // }
+        for(ProfileModel profileModel : profiles) {
+            profileModel.setFname(AnonymizeService.deAnonymizeData(profileModel.getFname()));
+            profileModel.setLname(AnonymizeService.deAnonymizeData(profileModel.getLname()));
+            profileModel.setEmail(AnonymizeService.deAnonymizeData(profileModel.getEmail()));
+            profileModel.setMobile(AnonymizeService.deAnonymizeData(profileModel.getMobile()));
+            profileModel.setOwnerId(AnonymizeService.deAnonymizeData(profileModel.getOwnerId()));
+        }
         return profiles;
     } 
 }

@@ -25,8 +25,6 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     final IProfileMgmt profileMgmt;
 
     @Override
-    @ApiIgnore
-    @ApiOperation(value = "Creates the Basic Profile of an Individual", authorizations = { @Authorization(value="jwtToken") })
     public ResponseEntity<ObjectResponseDto> createBasicProfile(@Valid BasicProfileCreationCommand profileCreationCommand) {
         return ResponseEntity.ok(profileMgmt.createBasicProfile(profileCreationCommand));
     }
