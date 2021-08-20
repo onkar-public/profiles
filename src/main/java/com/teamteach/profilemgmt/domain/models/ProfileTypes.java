@@ -5,5 +5,6 @@ public enum ProfileTypes {
     Teacher,
     Author,
     Admin,
-    SuperAdmin
+    SuperAdmin,
+    Child
 }
