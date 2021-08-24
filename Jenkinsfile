@@ -1,25 +1,39 @@
 pipeline {
     agent any
-    stages {
-        stage('Build The Image') {
+    environment {
+        REPO = "333490196116.dkr.ecr.ap-south-1.amazonaws.com"
+        PROJECT = "teamteach-profiles"
+        USER = "ec2-user"
+        DOMAIN = "myfamilycoach.ml"
+    }
+    stages{
+        stage('Build') {
             steps {
-                sh 'mvn clean install -Ddocker'
+                sh 'echo $GIT_BRANCH'
+                sh "mvn install -Ddocker -Dbranch=${GIT_BRANCH}"
             }
         }
-
-        stage('Push The Image') {
+        stage('Push to ECR') {
             steps {
-                sh 'docker tag teamteach/profiles:latest 333490196116.dkr.ecr.ap-south-1.amazonaws.com/teamteach-profiles'
+                sh 'docker tag ${PROJECT}:${GIT_BRANCH} ${REPO}/${PROJECT}:${GIT_BRANCH}'
                 sh '$(aws ecr get-login --no-include-email --region ap-south-1)'
-                sh 'docker push 333490196116.dkr.ecr.ap-south-1.amazonaws.com/teamteach-profiles'
+                sh "docker push ${REPO}/${PROJECT}:${GIT_BRANCH}"
             }
         }
-
-        stage('Pull and Run (ssh to ec2)') {
+        stage('Pull & Run') {
             steps {
-                sh 'ssh ec2-user@ms.digisherpa.ai \'$(aws ecr get-login --no-include-email --region ap-south-1) ; docker pull 333490196116.dkr.ecr.ap-south-1.amazonaws.com/teamteach-profiles:latest; docker stop teamteach-profiles ; docker rm teamteach-profiles; docker run --net=host -d --name teamteach-profiles 333490196116.dkr.ecr.ap-south-1.amazonaws.com/teamteach-profiles:latest; docker rmi $(docker images --filter "dangling=true" -q) \''
+                sh 'echo \'$(aws ecr get-login --no-include-email --region ap-south-1)\' > ${GIT_BRANCH}.sh'
+                sh 'echo docker pull $REPO/$PROJECT:$GIT_BRANCH >> ${GIT_BRANCH}.sh'
+                sh 'echo docker rm -f $PROJECT >> ${GIT_BRANCH}.sh'
+                sh 'echo docker run -p 8081:8081 -d --name $PROJECT $REPO/$PROJECT:$GIT_BRANCH >> ${GIT_BRANCH}.sh'
+                sh 'cat ${GIT_BRANCH}.sh | ssh ${USER}@$GIT_BRANCH.$DOMAIN' 
             }
         }
-
+        stage('Cleanup') {
+            when { branch 'dev' }
+            steps {
+                sh 'ssh ${USER}@$GIT_BRANCH.$DOMAIN \'$(aws ecr get-login --no-include-email --region ap-south-1) ; docker image prune -a \''
+            }
+        }
     }
 }
