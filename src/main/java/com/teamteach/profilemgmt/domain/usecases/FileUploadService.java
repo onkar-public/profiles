@@ -5,11 +5,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class FileUploadService {
+    @Value("${gateway.url}")
+    String gateway;
     RestTemplate restTemplate = new RestTemplate();
-    private final String S3_POSTURL = "https://ms.digisherpa.ai/files/upload/";
+    private final String S3_POSTURL = gateway+"/files/upload/";
 
     public String saveTeamTeachFile(String folder, String filename, byte[] fileByteArray) {
         HttpHeaders headers = new HttpHeaders();
