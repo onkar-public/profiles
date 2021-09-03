@@ -33,7 +33,7 @@ public class FileUploadService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         try {
-            System.out.println(S3_POSTURL+folder);
+            System.out.println(url);
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
             return response.getBody().toString();
         } catch (HttpClientErrorException e) {
