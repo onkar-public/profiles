@@ -10,11 +10,12 @@ import org.springframework.beans.factory.annotation.Value;
 @Service
 public class FileUploadService {
     @Value("${gateway.url}")
-    String gateway;
+    private String gateway;
+
     RestTemplate restTemplate = new RestTemplate();
-    private final String S3_POSTURL = gateway+"/files/upload/";
 
     public String saveTeamTeachFile(String folder, String filename, byte[] fileByteArray) {
+        String url = gateway+"/files/upload/"+folder;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -33,7 +34,7 @@ public class FileUploadService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         try {
             System.out.println(S3_POSTURL+folder);
-            ResponseEntity<String> response = restTemplate.exchange(S3_POSTURL+folder, HttpMethod.POST, requestEntity, String.class);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, String.class);
             return response.getBody().toString();
         } catch (HttpClientErrorException e) {
             e.printStackTrace();
