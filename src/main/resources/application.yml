@@ -2,13 +2,17 @@ server.port: 8082
 spring:
   data:
     mongodb:
-      uri: mongodb+srv://teamteach:DigiSherpa2021@cluster0.h80qy.mongodb.net/teamteach?retryWrites=true&w=majority
+      username: teamteach
+      password: DigiSherpa2021
+      database: teamteach
+      port: 27017
+      host: dev.myfamilycoach.ml
   rabbitmq:
-    host: 13.126.110.243
+    host: dev.digisherpa.ai
     port: 5672
     virtual-host: teamteach
     username: admin
-    password: DigiSherpa21
+    password: DigiSherpa2021
 
 app:
   security:
@@ -25,6 +29,7 @@ app:
 exchange:
   signup: signupexchange
 
-signup.routingkeys: event.email,event.profileupdate
+gateway.url: "https://dms.digisherpa.ai"
+
 listen.queue.names: event.profileupdate
 defaultImage: https://teamteach.s3.ap-south-1.amazonaws.com/profileImage/defaultProfileImage.jpeg
