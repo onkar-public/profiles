@@ -269,7 +269,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         profileRepository.saveProfile(profileModel);
         return ObjectResponseDto.builder()
                                 .success(true)
-                                .message("Profile image added successfully")
+                                .message("Child added successfully")
                                 .object(profileModel)
                                 .build();
     }
