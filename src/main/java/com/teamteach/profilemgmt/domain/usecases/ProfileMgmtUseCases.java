@@ -217,7 +217,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         profileRepository.saveProfile(editModel);
         return ObjectResponseDto.builder()
                                 .success(true)
-                                .message("Profile edited successfully")
+                                .message(editProfileCommand.getUserType()+" profile updated successfully")
                                 .object(editModel)
                                 .build();
     }
