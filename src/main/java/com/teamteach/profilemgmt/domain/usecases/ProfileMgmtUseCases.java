@@ -62,6 +62,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             } else if(userProfile.getAction().equals("delete")){
                 deleteProfile(userProfile);
             }
+            messagingPort.sendMessage(userProfile, "event.createjournal");
         }
     };
 
