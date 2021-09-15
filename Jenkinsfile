@@ -17,9 +17,10 @@ pipeline {
                 expression { env.GIT_BRANCH == env.BRANCH_TWO }
             } }
             steps {
-                sh 'echo $REPO'
                 sh 'echo $GIT_BRANCH'
-                sh "cp src/main/resources/application-${GIT_BRANCH}.yml src/main/resources/application.yml"
+                sh 'echo $REPO'
+                sh 'sed "s/dev.digisherpa.ai/$GIT_BRANCH.$MS_DOMAIN/g" src/main/resources/application.yml > application.yml'
+                sh 'mv application.yml src/main/resources/application.yml'
                 sh "mvn install -Ddocker -Dbranch=${GIT_BRANCH}"
             }
         }
