@@ -6,9 +6,9 @@ spring:
       password: DigiSherpa2021
       database: teamteach
       port: 27017
-      host: dev.digisherpa.ai
+      host: live.digisherpa.ai
   rabbitmq:
-    host: dev.digisherpa.ai
+    host: live.digisherpa.ai
     port: 5672
     virtual-host: teamteach
     username: admin
@@ -29,7 +29,7 @@ app:
 exchange:
   signup: signupexchange
 
-gateway.url: "https://dev.digisherpa.ai"
+gateway.url: "https://live.digisherpa.ai"
 
 listen.queue.names: event.profileupdate
 defaultImage: https://teamteach.s3.ap-south-1.amazonaws.com/profileImage/defaultProfileImage.jpeg

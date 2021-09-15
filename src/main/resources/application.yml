@@ -6,7 +6,7 @@ spring:
       password: DigiSherpa2021
       database: teamteach
       port: 27017
-      host: dev.myfamilycoach.ml
+      host: dev.digisherpa.ai
   rabbitmq:
     host: dev.digisherpa.ai
     port: 5672
