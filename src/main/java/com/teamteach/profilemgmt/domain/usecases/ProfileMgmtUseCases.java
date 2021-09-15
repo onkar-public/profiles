@@ -62,6 +62,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             } else if(userProfile.getAction().equals("delete")){
                 deleteProfile(userProfile);
             }
+            messagingPort.sendMessage(userProfile, "event.createjournal");
         }
     };
 
@@ -216,7 +217,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         profileRepository.saveProfile(editModel);
         return ObjectResponseDto.builder()
                                 .success(true)
-                                .message("Profile edited successfully")
+                                .message(editProfileCommand.getUserType()+" profile updated successfully")
                                 .object(editModel)
                                 .build();
     }
@@ -268,7 +269,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         profileRepository.saveProfile(profileModel);
         return ObjectResponseDto.builder()
                                 .success(true)
-                                .message("Profile image added successfully")
+                                .message("Child added successfully")
                                 .object(profileModel)
                                 .build();
     }
