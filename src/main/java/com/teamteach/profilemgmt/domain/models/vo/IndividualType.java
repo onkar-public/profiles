@@ -14,7 +14,7 @@ public class IndividualType {
     }
 
     private static ProfileTypes determineType(String input) {
-        return ProfileTypes.Parent;
+        return ProfileTypes.valueOf(input);
     }
 
     public IndividualType(ProfileTypes type) {
