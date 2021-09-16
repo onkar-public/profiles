@@ -187,6 +187,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
         if (editProfileCommand.getUserType() != null) {
             editModel.setUserType(IndividualType.createType(editProfileCommand.getUserType()));
+            System.out.println(editModel);
         }
         if(!editProfileCommand.getUserType().equals("Child")){
             if (editProfileCommand.getEmail() != null) {
