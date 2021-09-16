@@ -154,7 +154,6 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
         HashMap<SearchKey,String> searchCriteria = new HashMap<>();
         searchCriteria.put(new SearchKey("profileId",false),profileId);
-        searchCriteria.put(new SearchKey("userType.type",false),editProfileCommand.getUserType());
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel editModel = profiles.isEmpty() ? null : profiles.get(0);
         if (editModel == null) {
