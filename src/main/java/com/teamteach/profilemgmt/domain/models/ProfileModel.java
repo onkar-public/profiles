@@ -33,8 +33,4 @@ public class ProfileModel {
     private String countryCode;
     private String callingCode;
     private String timezone;
-
-    // public void setProfileImage(ProfileImage profileImage) {
-    //     this.profileImage = profileImage;
-    // }
 }
