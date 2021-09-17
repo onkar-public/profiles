@@ -13,6 +13,10 @@ spring:
     virtual-host: teamteach
     username: admin
     password: DigiSherpa2021
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 app:
   security:
