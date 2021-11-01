@@ -101,7 +101,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     public ParentProfileResponseDto getProfile(String ownerId){
         HashMap<SearchKey,String> searchCriteria = new HashMap<>();
         searchCriteria.put(new SearchKey("ownerId",true),ownerId);
-        searchCriteria.put(new SearchKey("userType.type",false),"Parent");
+        //searchCriteria.put(new SearchKey("userType.type",false),"Parent");
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel parentProfileModel = profiles.isEmpty() ? null : profiles.get(0);
         if (parentProfileModel == null) return null;
