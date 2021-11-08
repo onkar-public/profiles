@@ -8,7 +8,5 @@ public enum ProfileTypes {
     Author,
     Admin,
     SuperAdmin,
-    Child,
-    Student,
-    Class
+    Child
 }
