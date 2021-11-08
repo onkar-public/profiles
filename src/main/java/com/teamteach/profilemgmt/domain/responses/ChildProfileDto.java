@@ -11,4 +11,7 @@ public class ChildProfileDto {
     private String birthYear;
     private String info;
     private String profileImage;
+    private String classYear;
+    private String className;
+    private String userType;
 }

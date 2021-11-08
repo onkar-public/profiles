@@ -31,11 +31,11 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
 
     @Override
     public ResponseEntity<ObjectResponseDto> getProfile(String ownerId) {
-        ParentProfileResponseDto parentProfile = profileMgmt.getProfile(ownerId);
-        if (parentProfile == null) {
-            return ResponseEntity.ok(new ObjectResponseDto(false, "Parent profile not found", null));
+        ParentProfileResponseDto profile = profileMgmt.getProfile(ownerId);
+        if (profile == null) {
+            return ResponseEntity.ok(new ObjectResponseDto(false, "Profile not found", null));
         } else {
-            return ResponseEntity.ok(new ObjectResponseDto(true, "Parent profile retrieved", parentProfile));
+            return ResponseEntity.ok(new ObjectResponseDto(true, "Profile retrieved", profile));
         }
     }
 
@@ -68,8 +68,11 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
                                                         String fname,
                                                         String lname,
                                                         String birthYear,
-                                                        String info) {
-        AddChildCommand addChildCommand = new AddChildCommand(ownerId,fname,lname,birthYear,info,profileImage);                                                           
+                                                        String info,
+                                                        String className,
+                                                        String classYear,
+                                                        String userType) {
+        AddChildCommand addChildCommand = new AddChildCommand(ownerId,fname,lname,birthYear,info,profileImage,className,classYear,userType);                                                           
 		return ResponseEntity.ok(profileMgmt.addChild(addChildCommand));
     }
 

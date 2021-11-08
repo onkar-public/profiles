@@ -18,4 +18,7 @@ public class AddChildCommand extends ValidatingCommand<BasicProfileCreationComma
     private String birthYear;
     private String info;
     private MultipartFile profileImage;
+    private String className;
+    private String classYear;
+    private String userType;
 }

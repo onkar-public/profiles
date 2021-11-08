@@ -33,4 +33,6 @@ public class ProfileModel {
     private String countryCode;
     private String callingCode;
     private String timezone;
+    private String classYear;
+    private String className;
 }

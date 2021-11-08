@@ -6,5 +6,7 @@ public enum ProfileTypes {
     Author,
     Admin,
     SuperAdmin,
-    Child
+    Child,
+    Student,
+    Class
 }

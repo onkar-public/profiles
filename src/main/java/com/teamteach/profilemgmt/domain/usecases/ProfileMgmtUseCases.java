@@ -103,37 +103,39 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         searchCriteria.put(new SearchKey("ownerId",true),ownerId);
         //searchCriteria.put(new SearchKey("userType.type",false),"Parent");
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
-        ProfileModel parentProfileModel = profiles.isEmpty() ? null : profiles.get(0);
-        if (parentProfileModel == null) return null;
+        ProfileModel profileModel = profiles.isEmpty() ? null : profiles.get(0);
+        if (profileModel == null) return null;
         searchCriteria = new HashMap<>();
         searchCriteria.put(new SearchKey("ownerId",true),ownerId);
-        searchCriteria.put(new SearchKey("userType.type",false),"Child");
-        List<ProfileModel> children = profileRepository.getProfile(searchCriteria, null);
+        // searchCriteria.put(new SearchKey("userType.type",false),"Child");
+        HashMap<String,String> excludeCriteria = new HashMap<>();
+        excludeCriteria.put("userType.type","Parent");
+        List<ProfileModel> children = profileRepository.getProfile(searchCriteria, excludeCriteria);
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
             String name = child.getFname();
             if (child.getLname() != null && !child.getLname().equals("undefined")) name += " " + child.getLname();
-            childIdList.add(new ChildProfileDto(child.getProfileId(), name, child.getBirthYear(), child.getInfo(), child.getProfileImage()));
+            childIdList.add(new ChildProfileDto(child.getProfileId(), name, child.getBirthYear(), child.getInfo(), child.getProfileImage(),child.getClassName(),child.getClassYear(),child.getUserType().getType().toString()));
         }
     
         String[] timezones = getTimezones();
 
-        ParentProfileResponseDto parentProfile = ParentProfileResponseDto.builder()
-                                                                         .fname(parentProfileModel.getFname())
-                                                                         .lname(parentProfileModel.getLname())
-                                                                         .email(parentProfileModel.getEmail())
-                                                                         .mobile(parentProfileModel.getMobile())
-                                                                         .countryCode(parentProfileModel.getCountryCode())
-                                                                         .callingCode(parentProfileModel.getCallingCode())
-                                                                         .timezone(parentProfileModel.getTimezone())
-                                                                         .relation(parentProfileModel.getRelation())
+        ParentProfileResponseDto profile = ParentProfileResponseDto.builder()
+                                                                         .fname(profileModel.getFname())
+                                                                         .lname(profileModel.getLname())
+                                                                         .email(profileModel.getEmail())
+                                                                         .mobile(profileModel.getMobile())
+                                                                         .countryCode(profileModel.getCountryCode())
+                                                                         .callingCode(profileModel.getCallingCode())
+                                                                         .timezone(profileModel.getTimezone())
+                                                                         .relation(profileModel.getRelation())
                                                                          .children(childIdList)
-                                                                         .userType(parentProfileModel.getUserType().getType().toString())
-                                                                         .profileId(parentProfileModel.getProfileId())
-                                                                         .profileImage(parentProfileModel.getProfileImage())
+                                                                         .userType(profileModel.getUserType().getType().toString())
+                                                                         .profileId(profileModel.getProfileId())
+                                                                         .profileImage(profileModel.getProfileImage())
                                                                          .timezones(timezones)
                                                                          .build();
-        return parentProfile;                                                                
+        return profile;                                                                
     }
 
     @Override
@@ -180,15 +182,19 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                     .build();
                 }                    
             }
-            editModel.setFname(editProfileCommand.getFname());
+            if(!editProfileCommand.getUserType().equals("Class")){
+                editModel.setFname(editProfileCommand.getFname());
+            }
         }
         if (editProfileCommand.getLname() != null) {
-            editModel.setLname(editProfileCommand.getLname());
+            if(!editProfileCommand.getUserType().equals("Class")){
+                editModel.setLname(editProfileCommand.getLname());
+            }
         }
         if (editProfileCommand.getUserType() != null) {
             editModel.setUserType(IndividualType.createType(editProfileCommand.getUserType()));
         }
-        if(!editProfileCommand.getUserType().equals("Child")){
+        if(editProfileCommand.getUserType().equals("Teacher") || editProfileCommand.getUserType().equals("Parent")){
             if (editProfileCommand.getEmail() != null) {
                 editModel.setEmail(editProfileCommand.getEmail());
             }
@@ -207,15 +213,24 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             if(editProfileCommand.getMobile() != null) {
                 editModel.setMobile(editProfileCommand.getMobile());
             }
-        } else {
-            if (editProfileCommand.getBirthYear() != null) {
-                editModel.setBirthYear(editProfileCommand.getBirthYear());
-            }
+        } else{
             if (editProfileCommand.getInfo() != null) {
                 editModel.setInfo(editProfileCommand.getInfo());
             }
         }
-        
+         if(editProfileCommand.getUserType().equals("Child")) {
+            if (editProfileCommand.getBirthYear() != null) {
+                editModel.setBirthYear(editProfileCommand.getBirthYear());
+            }
+        }
+        if(editProfileCommand.getUserType().equals("Class") || editProfileCommand.getUserType().equals("Student")){
+            if (editProfileCommand.getClassYear() != null) {
+                editModel.setClassYear(editProfileCommand.getClassYear());
+            }
+            if (editProfileCommand.getClassName() != null) {
+                editModel.setClassName(editProfileCommand.getClassName());
+            }
+        }
         profileRepository.saveProfile(editModel);
         return ObjectResponseDto.builder()
                                 .success(true)
@@ -226,21 +241,41 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ObjectResponseDto addChild(AddChildCommand addChildCommand) {
-        if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
+        if(addChildCommand.getUserType().equals("Child")){
+            if (addChildCommand.getOwnerId() == null || addChildCommand.getFname() == null) {
+                return ObjectResponseDto.builder()
+                .success(false)
+                .message("Please provide at least the ownerId and fname in the requestBody")
+                .build();
+            }
+        } else if(addChildCommand.getUserType().equals("Student") || addChildCommand.getUserType().equals("Class")){
+            if(addChildCommand.getOwnerId() == null || addChildCommand.getClassName() == null || addChildCommand.getClassYear() == null){
+                return ObjectResponseDto.builder()
+                .success(false)
+                .message("Please provide at ownerId , className and classYear in the requestBody")
+                .build();
+            }
+        }else{
             return ObjectResponseDto.builder()
-            .success(false)
-            .message("Please provide at least the ownerId and fname in the requestBody")
-            .build();
+                .success(false)
+                .message("Please provide proper userType in the requestBody")
+                .build();
         }
         HashMap<SearchKey,String> searchCriteria = new HashMap<>();
-        searchCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
-        searchCriteria.put(new SearchKey("fname",true),addChildCommand.getFname());
+        if(addChildCommand.getUserType().equals("Class")){
+            searchCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
+            searchCriteria.put(new SearchKey("className",true),addChildCommand.getClassName());
+        }else{
+            searchCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
+            searchCriteria.put(new SearchKey("fname",true),addChildCommand.getFname()); 
+        }
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel findChild = profiles.isEmpty() ? null : profiles.get(0);
         ProfileModel profileModel = null;
         String profileId = sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME);
         if(findChild == null) {
-            profileModel = ProfileModel.builder()
+            if(addChildCommand.getUserType().equals("Child")){
+                profileModel = ProfileModel.builder()
                                         .profileId(profileId)
                                         .ownerId(addChildCommand.getOwnerId())
                                         .fname(addChildCommand.getFname())
@@ -249,6 +284,27 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                         .info(addChildCommand.getInfo())
                                         .userType(new IndividualType(ProfileTypes.Child))
                                         .build();
+            }else if(addChildCommand.getUserType().equals("Student")){
+                profileModel = ProfileModel.builder()
+                                           .profileId(profileId)
+                                           .ownerId(addChildCommand.getOwnerId())
+                                           .fname(addChildCommand.getFname())
+                                           .lname(addChildCommand.getLname())
+                                           .info(addChildCommand.getInfo())
+                                           .className(addChildCommand.getClassName())
+                                           .classYear(addChildCommand.getClassYear())
+                                           .userType(new IndividualType(ProfileTypes.Student))
+                                           .build();
+            } else if(addChildCommand.getUserType().equals("Class")){
+                profileModel = ProfileModel.builder()
+                                            .profileId(profileId)
+                                            .ownerId(addChildCommand.getOwnerId())
+                                            .info(addChildCommand.getInfo())
+                                            .className(addChildCommand.getClassName())
+                                            .classYear(addChildCommand.getClassYear())
+                                            .userType(new IndividualType(ProfileTypes.Class))
+                                            .build();
+            }
             String url = null;
             if(addChildCommand.getProfileImage() != null){
                 try {
@@ -266,12 +322,12 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                 profileModel.setProfileImage(default_image);
             }         
         } else {
-            return new ObjectResponseDto(false, "Child with same name cannot be added", null);
+            return new ObjectResponseDto(false, "Profile with same name cannot be added", null);
         }   
         profileRepository.saveProfile(profileModel);
         return ObjectResponseDto.builder()
                                 .success(true)
-                                .message("Child added successfully")
+                                .message("Profile added successfully")
                                 .object(profileModel)
                                 .build();
     }
