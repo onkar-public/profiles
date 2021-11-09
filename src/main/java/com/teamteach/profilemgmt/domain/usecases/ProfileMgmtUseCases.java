@@ -78,7 +78,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .profileImage(default_image)
                                                 .mobile(signUpCommand.getMobile())
                                                 .build();
-        if(signUpCommand.getProfileType().equals("TEACHER")){
+        if(signUpCommand.getProfiletype().equals("TEACHER")){
             profileModel.setUserType(new IndividualType(ProfileTypes.Teacher));
         }else{
             profileModel.setUserType(new IndividualType(ProfileTypes.Parent));
