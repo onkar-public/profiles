@@ -74,11 +74,15 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .fname(signUpCommand.getFname())
                                                 .email("")
                                                 .lname(signUpCommand.getLname())
-                                                .userType(new IndividualType(ProfileTypes.Parent))
                                                 .relation("")
                                                 .profileImage(default_image)
                                                 .mobile(signUpCommand.getMobile())
                                                 .build();
+        if(signUpCommand.getProfileType().equals("TEACHER")){
+            profileModel.setUserType(new IndividualType(ProfileTypes.Teacher));
+        }else{
+            profileModel.setUserType(new IndividualType(ProfileTypes.Parent));
+        }
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
 
