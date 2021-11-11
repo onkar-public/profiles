@@ -114,12 +114,19 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         // searchCriteria.put(new SearchKey("userType.type",false),"Child");
         HashMap<String,String> excludeCriteria = new HashMap<>();
         excludeCriteria.put("userType.type","Parent");
+        excludeCriteria.put("userType.type","Teacher");
         List<ProfileModel> children = profileRepository.getProfile(searchCriteria, excludeCriteria);
         List<ChildProfileDto> childIdList = new ArrayList<>();
         for (ProfileModel child : children) {
-            String name = child.getFname();
-            if (child.getLname() != null && !child.getLname().equals("undefined")) name += " " + child.getLname();
-            childIdList.add(new ChildProfileDto(child.getProfileId(), name, child.getBirthYear(), child.getInfo(), child.getProfileImage(),child.getClassYear(),child.getClassName(),child.getUserType().getType().toString()));
+            String name = null ;
+            if(child.getUserType().getType().toString().equals("Class")){
+                name = child.getClassName();
+                childIdList.add(new ChildProfileDto(child.getProfileId(), name, child.getBirthYear(), child.getInfo(), child.getProfileImage(),child.getClassYear(),null,child.getUserType().getType().toString()));
+            }else{
+                name = child.getFname();
+                if (child.getLname() != null && !child.getLname().equals("undefined")) name += " " + child.getLname();
+                childIdList.add(new ChildProfileDto(child.getProfileId(), name, child.getBirthYear(), child.getInfo(), child.getProfileImage(),child.getClassYear(),child.getClassName(),child.getUserType().getType().toString()));
+            }
         }
     
         String[] timezones = getTimezones();
