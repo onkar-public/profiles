@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,8 +31,10 @@ class ProfileResource extends AbstractAppController implements IProfileResource 
     }
 
     @Override
-    public ResponseEntity<ObjectResponseDto> getProfile(String ownerId) {
-        ParentProfileResponseDto profile = profileMgmt.getProfile(ownerId);
+    public ResponseEntity<ObjectResponseDto> getProfile(String ownerId, Optional<String> statusOpt) {
+        String status = "all";
+        if(statusOpt.isPresent()) status = statusOpt.get();
+        ParentProfileResponseDto profile = profileMgmt.getProfile(ownerId,status);
         if (profile == null) {
             return ResponseEntity.ok(new ObjectResponseDto(false, "Profile not found", null));
         } else {

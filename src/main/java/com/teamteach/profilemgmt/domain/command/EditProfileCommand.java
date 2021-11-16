@@ -20,4 +20,5 @@ public class EditProfileCommand extends ValidatingCommand<BasicProfileCreationCo
     private String info;
     private String classYear;
     private String className;
+    private Boolean active;
 }

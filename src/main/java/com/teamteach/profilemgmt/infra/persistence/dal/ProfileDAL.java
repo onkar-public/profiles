@@ -61,12 +61,12 @@ public class ProfileDAL  implements IProfileRepository {
     }
 
     @Override
-    public List<ProfileModel> getProfile(HashMap<SearchKey,String> searchCriteria, HashMap<String,String> excludeCriteria){
+    public List<ProfileModel> getProfile(HashMap<SearchKey,Object> searchCriteria, HashMap<String,String> excludeCriteria){
         Query query = new Query();
         if(searchCriteria != null){
-            for(Map.Entry<SearchKey,String> criteria : searchCriteria.entrySet()){
+            for(Map.Entry<SearchKey,Object> criteria : searchCriteria.entrySet()){
                 if(criteria.getKey().isAnonymizable()){
-                    query.addCriteria(Criteria.where(criteria.getKey().getField()).is(AnonymizeService.anonymizeData(criteria.getValue())));
+                    query.addCriteria(Criteria.where(criteria.getKey().getField()).is(AnonymizeService.anonymizeData((String)criteria.getValue())));
                 } else{
                     query.addCriteria(Criteria.where(criteria.getKey().getField()).is(criteria.getValue()));
                 }

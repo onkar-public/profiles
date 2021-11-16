@@ -102,8 +102,8 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
     }
 
     @Override
-    public ParentProfileResponseDto getProfile(String ownerId){
-        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+    public ParentProfileResponseDto getProfile(String ownerId, String status){
+        HashMap<SearchKey,Object> searchCriteria = new HashMap<>();
         searchCriteria.put(new SearchKey("ownerId",true),ownerId);
         //searchCriteria.put(new SearchKey("userType.type",false),"Parent");
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
@@ -111,6 +111,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         if (profileModel == null) return null;
         searchCriteria = new HashMap<>();
         searchCriteria.put(new SearchKey("ownerId",true),ownerId);
+        if(!status.equals("all")){
+            searchCriteria.put(new SearchKey("active",false),status.equals("active"));
+        }
         // searchCriteria.put(new SearchKey("userType.type",false),"Child");
         HashMap<String,String> excludeCriteria = new HashMap<>();
         excludeCriteria.put("userType.type","Parent");
@@ -165,7 +168,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .object(editProfileCommand)
                                     .build();
         }
-        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+        HashMap<SearchKey,Object> searchCriteria = new HashMap<>();
         searchCriteria.put(new SearchKey("profileId",false),profileId);
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel editModel = profiles.isEmpty() ? null : profiles.get(0);
@@ -240,6 +243,9 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             }
             if (editProfileCommand.getClassName() != null) {
                 editModel.setClassName(editProfileCommand.getClassName());
+            } 
+            if(editProfileCommand.getActive() != null){
+                editModel.setActive(editProfileCommand.getActive());
             }
         }
         profileRepository.saveProfile(editModel);
@@ -266,13 +272,24 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                 .message("Please provide at ownerId , className and classYear in the requestBody")
                 .build();
             }
+            HashMap<SearchKey,Object> validationCriteria = new HashMap<>();
+            validationCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
+            validationCriteria.put(new SearchKey("userType.type",false),addChildCommand.getUserType());
+            validationCriteria.put(new SearchKey("active",false),true);
+            List<ProfileModel> validationProfiles = profileRepository.getProfile(validationCriteria, null);
+            if(validationProfiles.size() > 9){
+                return ObjectResponseDto.builder()
+                .success(false)
+                .message("You cannot add more than 10 "+ addChildCommand.getUserType())
+                .build();
+            }
         }else{
             return ObjectResponseDto.builder()
                 .success(false)
                 .message("Please provide proper userType in the requestBody")
                 .build();
         }
-        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+        HashMap<SearchKey,Object> searchCriteria = new HashMap<>();
         if(addChildCommand.getUserType().equals("Class")){
             searchCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
             searchCriteria.put(new SearchKey("className",true),addChildCommand.getClassName());
@@ -305,6 +322,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                            .className(addChildCommand.getClassName())
                                            .classYear(addChildCommand.getClassYear())
                                            .userType(new IndividualType(ProfileTypes.Student))
+                                           .active(true)
                                            .build();
             } else if(addChildCommand.getUserType().equals("Class")){
                 profileModel = ProfileModel.builder()
@@ -314,6 +332,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                             .className(addChildCommand.getClassName())
                                             .classYear(addChildCommand.getClassYear())
                                             .userType(new IndividualType(ProfileTypes.Class))
+                                            .active(true)
                                             .build();
             }
             String url = null;
@@ -345,7 +364,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
 
     @Override
     public ObjectResponseDto saveTeamTeachFile(MultipartFile file, String id) {
-        HashMap<SearchKey,String> searchCriteria = new HashMap<>();
+        HashMap<SearchKey,Object> searchCriteria = new HashMap<>();
         searchCriteria.put(new SearchKey("profileId",false),id);
         List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
         ProfileModel pictureModel = profiles.isEmpty() ? null : profiles.get(0);

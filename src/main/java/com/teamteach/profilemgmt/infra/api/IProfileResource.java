@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RequestMapping("profiles")
 public interface IProfileResource {
@@ -41,8 +42,8 @@ public interface IProfileResource {
     @PostMapping("picture/{profileId}")
     ResponseEntity<ObjectResponseDto> editProfileImage(@PathVariable String profileId, @RequestParam("file") MultipartFile file);
 
-    @GetMapping("owner/{ownerId}")
-    ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String ownerId);
+    @GetMapping(value={"owner/{ownerId}","owner/{ownerId}/{statusOpt}"})
+    ResponseEntity<ObjectResponseDto> getProfile(@PathVariable String ownerId, @PathVariable Optional<String> statusOpt);
 
     @GetMapping("wtb/{ownerId}")
     ResponseEntity<ObjectResponseDto> getWTBDetails(@PathVariable String ownerId);

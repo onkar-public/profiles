@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface IProfileMgmt {
     ObjectResponseDto createBasicProfile(BasicProfileCreationCommand signUpCommand);
     //ObjectResponseDto addChild(AddChildCommand addChildCommand);
-    ParentProfileResponseDto getProfile(String ownerId);
+    ParentProfileResponseDto getProfile(String ownerId,String status);
     WTBDetailsResponse getWTBDetails(String ownerId);
     ObjectResponseDto editProfile(String profileId, EditProfileCommand editProfileCommand);
     ObjectResponseDto addChild(AddChildCommand addChildCommand);

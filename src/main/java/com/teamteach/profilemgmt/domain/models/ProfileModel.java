@@ -35,4 +35,5 @@ public class ProfileModel {
     private String timezone;
     private String classYear;
     private String className;
+    private Boolean active;
 }

@@ -13,5 +13,5 @@ public interface IProfileRepository {
    ProfileModel saveProfile(ProfileModel profileModel);
    ProfileModel addChild(ProfileModel profileModel);
    boolean removeProfile(String ownerId);
-   List<ProfileModel> getProfile(HashMap<SearchKey,String> searchCriteria, HashMap<String,String> excludeCriteria);
+   List<ProfileModel> getProfile(HashMap<SearchKey,Object> searchCriteria, HashMap<String,String> excludeCriteria);
 }
