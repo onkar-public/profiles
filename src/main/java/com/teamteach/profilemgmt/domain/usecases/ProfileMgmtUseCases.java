@@ -245,6 +245,19 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                 editModel.setClassName(editProfileCommand.getClassName());
             } 
             if(editProfileCommand.getActive() != null){
+                if(editProfileCommand.getActive()){
+                    HashMap<SearchKey,Object> validationCriteria = new HashMap<>();
+                    validationCriteria.put(new SearchKey("ownerId",true),editModel.getOwnerId());
+                    validationCriteria.put(new SearchKey("userType.type",false),editModel.getUserType().getType().toString());
+                    validationCriteria.put(new SearchKey("active",false),true);
+                    List<ProfileModel> validationProfiles = profileRepository.getProfile(validationCriteria, null);
+                    if(validationProfiles.size() > 9){
+                        return ObjectResponseDto.builder()
+                        .success(false)
+                        .message("You cannot add more than 10 "+ editModel.getUserType().getType().toString())
+                        .build(); 
+                    }
+                }
                 editModel.setActive(editProfileCommand.getActive());
             }
         }
