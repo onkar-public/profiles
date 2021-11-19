@@ -82,11 +82,10 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                                 .build();
         if(signUpCommand.getProfiletype().equals("TEACHER")){
             profileModel.setUserType(new IndividualType(ProfileTypes.Teacher));
-            System.out.println("Creating Teacher profile for" + signUpCommand.getFname());
         }else{
             profileModel.setUserType(new IndividualType(ProfileTypes.Parent));
-            System.out.println("Creating Parent profile for" + signUpCommand.getFname());
         }
+        System.out.println("Creating " + profileModel.getUserType().toString() + " for " + signUpCommand.getFname());
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
 
