@@ -55,7 +55,7 @@ public class ProfileDAL  implements IProfileRepository {
 
     @Override
     public boolean removeProfile(String ownerId){
-        Query query = new Query(Criteria.where("ownerId").is(ownerId));
+        Query query = new Query(Criteria.where("ownerId").is(AnonymizeService.anonymizeData(ownerId)));
         List<ProfileModel> profiles = mongoTemplate.findAllAndRemove(query, ProfileModel.class);
         return profiles.isEmpty() ? false : true;
     }
