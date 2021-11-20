@@ -305,15 +305,13 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                 .build();
         }
         HashMap<SearchKey,Object> searchCriteria = new HashMap<>();
-        if(addChildCommand.getUserType().equals("Class")){
-            searchCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
-            searchCriteria.put(new SearchKey("className",true),addChildCommand.getClassName());
-        }else{
-            searchCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
-            searchCriteria.put(new SearchKey("fname",true),addChildCommand.getFname()); 
+        searchCriteria.put(new SearchKey("ownerId",true),addChildCommand.getOwnerId());
+        searchCriteria.put(new SearchKey("fname",true),addChildCommand.getFname());  
+        ProfileModel findChild = null ;
+        if(addChildCommand.getUserType().equals("Child")){
+            List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
+            findChild = profiles.isEmpty() ? null : profiles.get(0);
         }
-        List<ProfileModel> profiles = profileRepository.getProfile(searchCriteria, null);
-        ProfileModel findChild = profiles.isEmpty() ? null : profiles.get(0);
         ProfileModel profileModel = null;
         String profileId = sequenceGeneratorService.generateSequence(ProfileModel.SEQUENCE_NAME);
         if(findChild == null) {
