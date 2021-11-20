@@ -85,6 +85,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }else{
             profileModel.setUserType(new IndividualType(ProfileTypes.Parent));
         }
+        System.out.println("Creating " + profileModel.getUserType().getType().toString() + " for " + signUpCommand.getFname());
         return new ObjectResponseDto(true, "Success", profileRepository.saveProfile(profileModel));
     }
 
