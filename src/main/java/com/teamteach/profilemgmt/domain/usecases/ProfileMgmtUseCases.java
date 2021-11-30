@@ -226,7 +226,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
         }
         if(editProfileCommand.getUserType().equals("Teacher") || editProfileCommand.getUserType().equals("Parent")){
             if (editProfileCommand.getEmail() != null) {
-                if(!Pattern.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$",editProfileCommand.getEmail())){
+                if(!Pattern.matches("^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$",editProfileCommand.getEmail()) && !editProfileCommand.getEmail().equals("")){
                     return ObjectResponseDto.builder()
                     .success(false)
                     .message("Invalid Email Address")
