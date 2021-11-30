@@ -182,7 +182,7 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .object(editModel)
                                     .build();
         }
-        if (editProfileCommand.getFname() != null) {
+        if (editProfileCommand.getFname() != null && !editProfileCommand.getFname().equals("")) {
             if (editProfileCommand.getUserType().equals("Child")) {
                 searchCriteria = new HashMap<>();
                 searchCriteria.put(new SearchKey("ownerId",true),editModel.getOwnerId());
