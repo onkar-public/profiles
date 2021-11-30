@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.*; 
 
 @RequiredArgsConstructor
 public class ProfileMgmtUseCases implements IProfileMgmt {
@@ -183,6 +184,12 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
                                     .build();
         }
         if (editProfileCommand.getFname() != null && !editProfileCommand.getFname().equals("")) {
+            if(!Pattern.matches("^[a-zA-Z]*$",editProfileCommand.getFname())){
+                return ObjectResponseDto.builder()
+                .success(false)
+                .message("You can only add alphabets to fname")
+                .build();
+            }
             if (editProfileCommand.getUserType().equals("Child")) {
                 searchCriteria = new HashMap<>();
                 searchCriteria.put(new SearchKey("ownerId",true),editModel.getOwnerId());
@@ -204,6 +211,12 @@ public class ProfileMgmtUseCases implements IProfileMgmt {
             }
         }
         if (editProfileCommand.getLname() != null) {
+            if(!Pattern.matches("^[a-zA-Z]*$",editProfileCommand.getLname())){
+                return ObjectResponseDto.builder()
+                .success(false)
+                .message("You can only add alphabets to lname")
+                .build();
+            }
             if(!editProfileCommand.getUserType().equals("Class")){
                 editModel.setLname(editProfileCommand.getLname());
             }
